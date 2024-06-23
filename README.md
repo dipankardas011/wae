@@ -47,5 +47,7 @@ Integrate the above two goals [3](#goal-3) [4](#goal-4)
 
 - [ ] Achieved?
 
-Use wattime api
+- Use wattime api
+- IMage generation using the openai things here [Repo Link](https://gitlab.com/dipankardas011/llm-usage/)
+
 https://docs.watttime.org/
