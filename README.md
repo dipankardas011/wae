@@ -10,7 +10,7 @@ Why ti create this becuase this is the main selling point of the wasi to be able
 
 ## Goal 1
 
-- [ ] Achieved?
+- [x] Achieved?
 
 Create a CLI in Rust which can take users input and make it runable
 > Hint: use clappy
