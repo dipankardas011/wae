@@ -26,7 +26,7 @@ THings it should be able to perform
 - [ ] Achieved?
 
 1. Password generator (Python)
-  - Return a string
+  - [x] Return a string
 2. SSH KeyGen (Python or Go)
   - Return Public Key and Private Key in string
 
