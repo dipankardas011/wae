@@ -2,32 +2,45 @@
 mod bindings;
 
 use std::env;
-
 use clap::Parser;
+use std::fs;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
-struct DemoCmd {
-    #[arg(short='n', long="name")]
+struct CommandToPerform {
+    #[arg(short = 'n', long = "name")]
     name: String,
+
+    #[arg(short='o', long="op", value_parser=[OP_GENERATE_RANDOM_PASSWORD, "demo"], default_value_t=String::from("demo"))]
+    operation: String,
 }
 
-use std::fs;
 
 const FILE_PATH: &str = "README.md";
+const OP_GENERATE_RANDOM_PASSWORD: &str = "gen_rand_pass";
 
 fn main() {
-    let args = DemoCmd::parse();
-    println!("Your Name: {}", args.name);
+    let args = CommandToPerform::parse();
 
-    for (key, value) in env::vars() {
-        println!("{key} : {value}");
+    if args.operation == OP_GENERATE_RANDOM_PASSWORD {
+        println!(" > Enter Length of Password");
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).expect("Failed to read line");
+        let length_pass: u32 = input.trim().parse().expect("Invalid Input");
+
+        println!("Created password of len: {length_pass}");
+    } else {
+        println!("Your Name: {}, Op: {}", args.name, args.operation);
+
+        for (key, value) in env::vars() {
+            println!("{key} : {value}");
+        }
+
+        println!("In file {FILE_PATH}");
+
+        let contents =
+            fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
+
+        println!("Content upto 50 chars: {}\n", &contents[..50]);
     }
-
-    println!("In file {FILE_PATH}");
-
-    let contents = fs::read_to_string(FILE_PATH)
-        .expect("Should have been able to read the file");
-
-    println!("With text:\n{contents}");
 }

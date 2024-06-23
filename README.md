@@ -17,6 +17,7 @@ Create a CLI in Rust which can take users input and make it runable
 
 THings it should be able to perform
 - User input
+- command line input
 - Environment variable get
 - write a location
 
