@@ -8,5 +8,27 @@ componentize-py --wit-path wit/world.wit --world crypto bindings .
 
 once done we will make a compoent out
 ```bash
-componentize-py --wit-path wit/world.wit --world crypto componentize password -o crypto.wasm
+componentize-py -d wit/world.wit -w crypto componentize --stub-wasi password -o crypto.wasm
 ```
+
+how to use host thing
+
+
+```bash
+pip install wasmtime
+python -m wasmtime.bindgen crypto.wasm --out-dir crypto_host
+
+cat <<EOF > host.py
+from crypto_host import Root
+from wasmtime import Config, Engine, Store
+
+config = Config()
+config.cache = True
+engine = Engine(config)
+store = Store(engine)
+hello = Root(store)
+print(f"component says: {hello.generate_random(store, 5)}")
+EOF
+```
+
+python -m wasmtime.bindgen crypto.wasm --out-dir crypto_host
