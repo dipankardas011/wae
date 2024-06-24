@@ -1,4 +1,4 @@
-from crypto_host import Root
+from password_host import Root
 from wasmtime import Config, Engine, Store
 
 config = Config()
