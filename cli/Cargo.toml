@@ -18,5 +18,6 @@ lto = true
 
 [package.metadata.component]
 package = "component:cli"
+adapter = "wasi_snapshot_preview2.wasm"
 
 [package.metadata.component.dependencies]
