@@ -1,6 +1,0 @@
-package dipankardas011:cli@0.1.0;
-
-world app {
-    import dipankardas011:crypto/password@0.1.1;
-}
-

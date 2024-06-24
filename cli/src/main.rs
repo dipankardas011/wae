@@ -4,6 +4,8 @@ mod bindings;
 use std::env;
 use clap::Parser;
 use std::fs;
+use std::time::{Duration, SystemTime};
+use std::thread::sleep;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -21,14 +23,27 @@ const OP_GENERATE_RANDOM_PASSWORD: &str = "gen_rand_pass";
 
 fn main() {
     let args = CommandToPerform::parse();
+    let now = SystemTime::now();
 
+    // we sleep for 2 seconds
+    sleep(Duration::new(2, 0));
+    match now.elapsed() {
+        Ok(elapsed) => {
+            println!("{}", elapsed.as_secs());
+        }
+        Err(e) => {
+            println!("Error: {e:?}");
+        }
+    }
     if args.operation == OP_GENERATE_RANDOM_PASSWORD {
         println!(" > Enter Length of Password");
         let mut input = String::new();
         std::io::stdin().read_line(&mut input).expect("Failed to read line");
         let length_pass: u32 = input.trim().parse().expect("Invalid Input");
 
-        println!("Created password of len: {length_pass}");
+        let gen_pass: String = generate_password(length_pass as usize);
+
+        println!("Created password {gen_pass} of len: {length_pass}");
     } else {
         println!("Your Name: {}, Op: {}", args.name, args.operation);
 
@@ -43,4 +58,18 @@ fn main() {
 
         println!("Content upto 50 chars: {}\n", &contents[..50]);
     }
+}
+
+
+use rand::{thread_rng, Rng};
+use rand::distributions::Alphanumeric;
+
+fn generate_password(length: usize) -> String {
+    let password: String = thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(length)
+        .map(char::from)
+        .collect();
+
+    password
 }
