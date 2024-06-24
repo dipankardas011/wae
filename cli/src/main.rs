@@ -1,3 +1,5 @@
+cargo_component_bindings::generate!();
+
 #[allow(warnings)]
 mod bindings;
 
@@ -21,6 +23,9 @@ struct CommandToPerform {
 const FILE_PATH: &str = "README.md";
 const OP_GENERATE_RANDOM_PASSWORD: &str = "gen_rand_pass";
 
+
+use bindings::dipankardas011::crypto::password::generate_random;
+
 fn main() {
     let args = CommandToPerform::parse();
     let now = SystemTime::now();
@@ -42,8 +47,9 @@ fn main() {
         let length_pass: u32 = input.trim().parse().expect("Invalid Input");
 
         let gen_pass: String = generate_password(length_pass as usize);
+        let gen_pass_1 = generate_random(length_pass);
 
-        println!("Created password {gen_pass} of len: {length_pass}");
+        println!("Created password {gen_pass} {gen_pass_1} of len: {length_pass}");
     } else {
         println!("Your Name: {}, Op: {}", args.name, args.operation);
 

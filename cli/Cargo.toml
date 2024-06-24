@@ -8,7 +8,11 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.5.7", features = ["derive"] }
 rand = "0.8.5"
+reqwest= "0.11"
+futures = "0.3"
+tokio = "1.38.0"
 wit-bindgen-rt = { version = "0.26.0", features = ["bitflags"] }
+
 
 [profile.release]
 codegen-units = 1
@@ -18,6 +22,12 @@ strip = true
 lto = true
 
 [package.metadata.component]
-package = "component:cli"
+package = "dipankardas011:cli"
+
+[package.metadata.component.target]
+path = "wit"
+
+[package.metadata.component.target.dependencies]
+"dipankardas011:crypto" = { path = "../crypto/wit" }
 
 [package.metadata.component.dependencies]
