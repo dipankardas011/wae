@@ -1,0 +1,9 @@
+package dipankardas011:githubapi@0.1.0;
+
+interface releases {
+    fetch-latest: func(org: string, proj: string) -> string;
+}
+
+world project {
+    export releases;
+}

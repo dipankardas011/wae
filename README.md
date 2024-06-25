@@ -25,9 +25,7 @@ THings it should be able to perform
 
 - [x] Achieved?
 
-1. Password generator (Python)
-2. SSH KeyGen (Python or Go)
-  - Return Public Key and Private Key in string
+- Password generator (Python)
 
 ## Goal 3
 
@@ -43,6 +41,7 @@ Github Api based wit and implementation which we can use in the cli to perform s
 
 1. Expectation get the latest release
 - org:repo and the other things
+2. Openai api usage
 
 ## Goal 5
 
