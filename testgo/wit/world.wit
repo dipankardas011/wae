@@ -1,0 +1,9 @@
+package dipankardas011:demo;
+
+interface releases {
+	fetch-latest: func() -> string;
+}
+
+world project {
+	export releases;
+}
