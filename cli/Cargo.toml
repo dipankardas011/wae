@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.5.7", features = ["derive"] }
+log = "0.4.21"
 wit-bindgen-rt = { version = "0.26.0", features = ["bitflags"] }
 
 

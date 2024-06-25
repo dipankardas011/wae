@@ -9,6 +9,7 @@ use std::fs;
 use std::time::{Duration, SystemTime};
 use std::thread::sleep;
 
+
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct CommandToPerform {
