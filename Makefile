@@ -14,8 +14,8 @@ build: build_crypto build_cli
 
 .PHONY: run_gen_pass
 run_gen_pass:
-	@wasmtime run composed.wasm -n password-gen -o gen_rand_pass
+	wasmtime run composed.wasm -n password-gen -o gen_rand_pass
 
 .PHONY: run_demo
 run_demo:
-	@wasmtime run --env OPENAI_API_KEY="ABCD1234" --dir=. composed.wasm -n dipankar -o demo
+	wasmtime run --env OPENAI_API_KEY="ABCD1234" --dir=. composed.wasm -n dipankar -o demo
