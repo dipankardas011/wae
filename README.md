@@ -23,16 +23,15 @@ THings it should be able to perform
 
 ## Goal 2
 
-- [ ] Achieved?
+- [x] Achieved?
 
 1. Password generator (Python)
-  - [x] Return a string
 2. SSH KeyGen (Python or Go)
   - Return Public Key and Private Key in string
 
 ## Goal 3
 
-- [ ] Achieved?
+- [x] Achieved?
 
 Integrate the above two goals [1](#goal-1) [2](#goal-2)
 

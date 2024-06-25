@@ -46,10 +46,9 @@ fn main() {
         std::io::stdin().read_line(&mut input).expect("Failed to read line");
         let length_pass: u32 = input.trim().parse().expect("Invalid Input");
 
-        let gen_pass: String = generate_password(length_pass as usize);
-        let gen_pass_1 = generate_random(length_pass);
+        let gen_pass = generate_random(length_pass);
 
-        println!("Created password {gen_pass} {gen_pass_1} of len: {length_pass}");
+        println!("Created password '{gen_pass}'");
     } else {
         println!("Your Name: {}, Op: {}", args.name, args.operation);
 
@@ -66,16 +65,3 @@ fn main() {
     }
 }
 
-
-use rand::{thread_rng, Rng};
-use rand::distributions::Alphanumeric;
-
-fn generate_password(length: usize) -> String {
-    let password: String = thread_rng()
-        .sample_iter(&Alphanumeric)
-        .take(length)
-        .map(char::from)
-        .collect();
-
-    password
-}
