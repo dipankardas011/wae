@@ -13,4 +13,4 @@ class Password(exports.Password):
         special = string.punctuation
         charset = lowercase+uppercase+numbers+special
         password = ''.join(random.choice(charset) for _ in range(length))
-        return password
+        return f"[PY password: {password}, length: {length}]"
