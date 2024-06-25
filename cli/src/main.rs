@@ -1,4 +1,4 @@
-cargo_component_bindings::generate!();
+// cargo_component_bindings::generate!();
 
 #[allow(warnings)]
 mod bindings;

@@ -1,5 +1,9 @@
 package dipankardas011:crypto@0.1.0;
 
-world password {
-    export generate-random: func(length: u32) -> string;
+interface password {
+    generate-random: func(length: u32) -> string;
+}
+
+world crypto {
+    export password;
 }

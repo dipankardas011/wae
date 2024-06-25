@@ -1,13 +1,13 @@
 
 it creates the initial boilderplate code using the wit
 ```bash
-componentize-py --wit-path wit/world.wit --world password bindings password_guest
+componentize-py --wit-path wit/world.wit --world crypto bindings crypto_guest
 ```
 
 
 once done we will make a compoent out
 ```bash
-componentize-py -d wit/world.wit -w password componentize --stub-wasi app_password -o password.wasm
+componentize-py -d wit/world.wit -w crypto componentize --stub-wasi app_crypto -o crypto.wasm
 ```
 
 how to use host thing
@@ -15,7 +15,7 @@ how to use host thing
 
 ```bash
 pip install wasmtime
-python -m wasmtime.bindgen password.wasm --out-dir password_host
+python -m wasmtime.bindgen crypto.wasm --out-dir crypto_host
 
 cat <<EOF > host.py
 from password_host import Root
