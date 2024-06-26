@@ -9,7 +9,7 @@ edition = "2021"
 clap = { version = "4.5.7", features = ["derive"] }
 log = "0.4.21"
 wit-bindgen-rt = { version = "0.26.0", features = ["bitflags"] }
-
+http = "1.0"
 
 [profile.release]
 codegen-units = 1

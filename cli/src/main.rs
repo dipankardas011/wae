@@ -28,8 +28,25 @@ const OP_PROJ_LATEST_RELEASE: &str = "pro_latest_release";
 
 use bindings::dipankardas011::{ crypto::password::generate_random, githubapi::releases::fetch_latest };
 
+// fn fetch_latest_internal(org: &str, proj: &str) -> Result<String> {
+//     let url = format!("https://api.github.com/repos/{}/{}/releases/latest", org, proj);
+//     
+//     let response = ureq::get(&url)
+//         .set("User-Agent", "rust-wasi-github-api")
+//         .call()?;
+//
+//     let body = response.into_string()?;
+//     let json: Value = serde_json::from_str(&body)?;
+//
+//     json["tag_name"]
+//         .as_str()
+//         .map(|s| s.to_string())
+//         .ok_or_else(|| anyhow::anyhow!("tag_name not found in response"))
+// }
+
 fn main() {
     let args = CommandToPerform::parse();
+
     if args.operation == OP_GENERATE_RANDOM_PASSWORD {
         println!(" > Enter Length of Password");
         let mut input = String::new();

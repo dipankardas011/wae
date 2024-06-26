@@ -1,7 +1,5 @@
 from typing import override
 from githubapi_guest.project import exports
-# import json
-from spin_sdk import http
 
 
 class Releases(exports.Releases):
@@ -10,16 +8,14 @@ class Releases(exports.Releases):
         print(f"Fetching latest release for {org}:{proj}@latest")
         url = f"https://api.github.com/repos/{org}/{proj}/releases/latest"
         print(f"Url to reach out for {url}")
-        headers = {}
-
-        response = http.send(http.Request(
-            method="GET",
-            uri=url,
-            headers=headers,
-            body=None,
-        ))
-        # data = response.body
-        print(response)
+        # response = http.send(http.Request(
+        #     method="GET",
+        #     uri=url,
+        #     headers=headers,
+        #     body=None,
+        # ))
+        # # data = response.body
+        # print(response)
         return "cdscs"
         # release_info = json.loads(data)
         # return str(release_info["tag_name"])
