@@ -8,9 +8,8 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.5.7", features = ["derive"] }
 wit-bindgen-rt = { version = "0.26.0", features = ["bitflags"] }
-ureq = "2.9.7"
-serde_json = "1.0.118"
-anyhow = "1.0.86"
+tokio = { version = "1.38.0", features = ["sync","macros","io-util","rt","time"] }
+reqwest = "0.12.5"
 
 [profile.release]
 codegen-units = 1

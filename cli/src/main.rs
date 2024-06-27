@@ -23,32 +23,36 @@ const FILE_PATH: &str = "README.md";
 const OP_GENERATE_RANDOM_PASSWORD: &str = "gen_rand_pass";
 const OP_PROJ_LATEST_RELEASE: &str = "pro_latest_release";
 
-use ureq;
-use serde_json;
 
 use bindings::dipankardas011::{ crypto::password::generate_random, githubapi::releases::fetch_latest };
 
-use serde_json::Value;
-use anyhow::Result;
+use reqwest;
 
-fn fetch_latest_internal(org: &str, proj: &str) -> Result<String> {
-    let url = format!("https://api.github.com/repos/{}/{}/releases/latest", org, proj);
-    
-    let response = ureq::get(&url)
-        .set("User-Agent", "rust-wasi-github-api")
-        .call()?;
+async fn fetch_latest_internal(org: &str, proj: &str) {
+    let url = format!("https://api.github.com/repos/{org}/{proj}/releases/latest");
+    println!("Url: {url}");
+    let body = reqwest::get(url).await;
 
-    let body = response.into_string()?;
-    let json: Value = serde_json::from_str(&body)?;
-
-    json["tag_name"]
-        .as_str()
-        .map(|s| s.to_string())
-        .ok_or_else(|| anyhow::anyhow!("tag_name not found in response"))
+    match body {
+        Ok(b) => {
+            let bb = b.text().await;
+            println!("body = {bb:?}");
+        }
+        Err(e) => {
+            println!("Err: {e}");
+        }
+    }
 }
 
-fn main() {
+async fn hh() {
+    println!(" @@ Called Async GG @@");
+}
+
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
     let args = CommandToPerform::parse();
+
+    hh().await;
 
     if args.operation == OP_GENERATE_RANDOM_PASSWORD {
         println!(" > Enter Length of Password");
@@ -73,13 +77,7 @@ fn main() {
 
         let ver = fetch_latest(&org, &proj);
         println!("Latest version: {ver}");
-
-        let r = fetch_latest_internal(&org, &proj);
-        match r {
-            Ok(v) => println!("Ver {v}"),
-            Err(e) => println!("Err {e}"),
-        }
-
+        fetch_latest_internal(&org, &proj).await;
         
     } else {
         println!("Your Name: {}, Op: {}", args.name, args.operation);
