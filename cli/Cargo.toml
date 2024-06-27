@@ -9,7 +9,8 @@ edition = "2021"
 clap = { version = "4.5.7", features = ["derive"] }
 wit-bindgen-rt = { version = "0.26.0", features = ["bitflags"] }
 tokio = { version = "1.38.0", features = ["sync","macros","io-util","rt","time"] }
-reqwest = "0.12.5"
+spin-sdk = "3.0.1"
+anyhow = "1.0.86"
 
 [profile.release]
 codegen-units = 1

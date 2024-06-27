@@ -26,22 +26,26 @@ const OP_PROJ_LATEST_RELEASE: &str = "pro_latest_release";
 
 use bindings::dipankardas011::{ crypto::password::generate_random, githubapi::releases::fetch_latest };
 
-use reqwest;
 
-async fn fetch_latest_internal(org: &str, proj: &str) {
-    let url = format!("https://api.github.com/repos/{org}/{proj}/releases/latest");
-    println!("Url: {url}");
-    let body = reqwest::get(url).await;
+use anyhow::Result;
+use spin_sdk::{
+    http::{IntoResponse, Request, Response},
+    http_component,
+};
 
-    match body {
-        Ok(b) => {
-            let bb = b.text().await;
-            println!("body = {bb:?}");
-        }
-        Err(e) => {
-            println!("Err: {e}");
-        }
-    }
+/// Send an HTTP request and return the response.
+#[http_component]
+async fn send_outbound(_req: Request) -> Result<impl IntoResponse> {
+    let resp: Response = spin_sdk::http::send(Request::get(
+        "https://random-data-api.fermyon.app/animals/json",
+    ))
+    .await?;
+    let resp = resp
+        .into_builder()
+        .header("spin-component", "rust-outbound-http")
+        .build();
+    println!("{resp:?}");
+    Ok(resp)
 }
 
 async fn hh() {
@@ -77,7 +81,7 @@ async fn main() {
 
         let ver = fetch_latest(&org, &proj);
         println!("Latest version: {ver}");
-        fetch_latest_internal(&org, &proj).await;
+        let _ = send_outbound(Request::new(spin_sdk::http::Method::Get, "")).await;
         
     } else {
         println!("Your Name: {}, Op: {}", args.name, args.operation);
