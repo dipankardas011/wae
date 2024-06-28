@@ -59,6 +59,12 @@ Integrate the above two goals [3](#goal-3) [4](#goal-4)
 
 https://docs.watttime.org/
 
+## Goal 7
+
+- [ ] Achieved?
+
+- create a vault client for intereacting with it
+
 
 > [!IMPORTANT]
 > Finally deploy using these in a docker container and runtimeclass in K8s
