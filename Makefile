@@ -2,8 +2,8 @@
 build_cli:
 	cd cli && cargo component build --release
 	@echo "PASS: [+] Build for cli/"
-	wac plug cli/target/wasm32-wasi/release/cli.wasm \
-		--plug crypto/crypto.wasm \
+	# wac plug cli/target/wasm32-wasi/release/cli.wasm \
+		 --plug crypto/crypto.wasm \
 		--plug githubapi/githubapi.wasm \
 		-o composed.wasm
 	@echo "PASS: [+] wac plug"
