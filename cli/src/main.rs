@@ -146,7 +146,13 @@ async fn main() -> Result<()> {
         return Ok(());
     }
 
-    let spwq = request.set_path_with_query(Some( "37755ae8-bcfc-4d15-9c60-a896dcad5453.mock.pstmn.io/path?q=1#something" ));
+    let stau = request.set_authority(Some( "37755ae8-bcfc-4d15-9c60-a896dcad5453.mock.pstmn.io" ));
+    if let Err(_) = stau {
+        println!("Error: Invalid Authority, couldn't set request authority");
+        return Ok(());
+    }
+
+    let spwq = request.set_path_with_query(Some( "https://37755ae8-bcfc-4d15-9c60-a896dcad5453.mock.pstmn.io/" ));
     if let Err(_) = spwq {
         println!("Error: Invalid URL or something, couldn't set request url");
         return Ok(());
@@ -193,6 +199,18 @@ async fn main() -> Result<()> {
     let response = response.unwrap();
 
     println!("Incoming Response: {response:?}");
+
+    let status = response.status();
+
+    let headers = response.headers();
+
+    let baudi = response.consume().unwrap();
+
+    let body = baudi.stream().unwrap().read(1000).unwrap();
+
+    let body_str = String::from_utf8(body).unwrap();
+
+    println!("Response Headers: {headers:?} \n Status: {status:?} \n Body: {body_str}");
 
     Ok(())
 
