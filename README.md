@@ -35,13 +35,13 @@ Integrate the above two goals [1](#goal-1) [2](#goal-2)
 
 ## Goal 4
 
-- [ ] Achieved?
+- [x] Achieved?
 
 Github Api based wit and implementation which we can use in the cli to perform some operations
 
 1. Expectation get the latest release
 - org:repo and the other things
-2. Openai api usage
+2. Openai api usage (TODO)
 
 ## Goal 5
 
