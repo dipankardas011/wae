@@ -6,6 +6,7 @@ build_cli:
 	wac plug cli/target/wasm32-wasi/release/cli.wasm \
 		--plug crypto/crypto.wasm \
 		--plug githubapi/target/wasm32-wasi/release/githubapi.wasm \
+		--plug httpclient/target/wasm32-wasi/release/httpclient.wasm \
 		-o composed.wasm
 	@echo "PASS: [+] wac plug"
 
@@ -25,8 +26,14 @@ build_github_api:
 		cargo component build --release
 	@echo "PASS: [+] Build for githubapi/"
 
+.PHONY: build_httpclient
+build_httpclient:
+	cd httpclient && \
+		cargo component build --release
+	@echo "PASS: [+] Build for httpclient/"
+
 .PHONY: build
-build: build_crypto build_github_api build_cli
+build: build_crypto build_github_api build_httpclient build_cli
 
 .PHONY: run_gen_pass
 run_gen_pass:

@@ -24,7 +24,11 @@ const OP_GENERATE_RANDOM_PASSWORD: &str = "gen_rand_pass";
 const OP_PROJ_LATEST_RELEASE: &str = "pro_latest_release";
 
 
-use bindings::dipankardas011::{ crypto::password::generate_random, githubapi::releases::fetch_latest };
+use bindings::dipankardas011::{
+    crypto::password::generate_random,
+    githubapi::releases::fetch_latest,
+    httpclient::outgoing_http::{get_request}
+};
 
 
 use anyhow::Result;
@@ -92,6 +96,8 @@ async fn main() -> Result<()> {
             }
         }
     }
+
+    let _ = get_request("get", &["".to_string()],"https://ksctl.com");
 
     Ok(())
 }
