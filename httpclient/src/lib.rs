@@ -87,7 +87,7 @@ fn execute_request(method: String, _headers: Vec<String>, url: String) -> Result
         Some(Ok(Ok(response))) => {
             let status = response.status();
             let headers = response.headers();
-            let body = response.consume().unwrap().stream().unwrap().read(1000).unwrap();
+            let body = response.consume().unwrap().stream().unwrap().read(10000).unwrap();
             let body_str = String::from_utf8(body).unwrap();
 
             println!("Response Headers: {headers:?} \n Status: {status:?} \n Body: {body_str}");
