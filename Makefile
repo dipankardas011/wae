@@ -1,10 +1,11 @@
 .PHONY: build_cli
 build_cli:
-	cd cli && cargo component build --release
+	cd cli && \
+		cargo component build --release
 	@echo "PASS: [+] Build for cli/"
-	# wac plug cli/target/wasm32-wasi/release/cli.wasm \
-		 --plug crypto/crypto.wasm \
-		--plug githubapi/githubapi.wasm \
+	wac plug cli/target/wasm32-wasi/release/cli.wasm \
+		--plug crypto/crypto.wasm \
+		--plug githubapi/target/wasm32-wasi/release/githubapi.wasm \
 		-o composed.wasm
 	@echo "PASS: [+] wac plug"
 
@@ -16,18 +17,12 @@ build_crypto:
 			-w crypto \
 			componentize app_crypto \
 			-o crypto.wasm
-			# --module-worlds spin_sdk=spin-imports
 	@echo "PASS: [+] Build for crypto/"
 
 .PHONY: build_github_api
 build_github_api:
 	cd githubapi && \
-		componentize-py \
-			-d wit/world.wit \
-			-w project \
-			componentize app \
-			-o githubapi.wasm
-			# --module-worlds spin_sdk=spin-imports
+		cargo component build --release
 	@echo "PASS: [+] Build for githubapi/"
 
 .PHONY: build
@@ -43,7 +38,7 @@ run_demo:
 
 .PHONY: run_get_latest_release
 run_get_latest_release:
-	wasmtime run -S inherit-network -S cli -S http -S preview2 -S allow-ip-name-lookup composed.wasm -n dipankar -o pro_latest_release
+	wasmtime run -S inherit-network -S http composed.wasm -n dipankar -o pro_latest_release
 
 .PHONY: clean
 clean:

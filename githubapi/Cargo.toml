@@ -1,0 +1,25 @@
+[package]
+name = "githubapi"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wit-bindgen-rt = { version = "0.27.0", features = ["bitflags"] }
+anyhow = "1.0.86"
+serde_json = "1.0.118"
+waki = "0.3.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+codegen-units = 1
+opt-level = "s"
+debug = false
+strip = true
+lto = true
+
+[package.metadata.component]
+package = "dipankardas011:githubapi"
+
+[package.metadata.component.dependencies]
