@@ -2,6 +2,7 @@
 mod bindings;
 
 use std::env;
+use bindings::dipankardas011::httpclient::outgoing_http::RequestHeader;
 use clap::Parser;
 use std::fs;
 use std::time::{Duration, SystemTime};
@@ -97,7 +98,17 @@ async fn main() -> Result<()> {
         }
     }
 
-    let _ = get_request("get", &["".to_string()],"https://ksctl.com");
+    let headers = vec![
+        RequestHeader{
+            key: "NICE".to_string(),
+            value: "WASISII".to_string(),
+        },
+    ];
+
+    match get_request("get", &headers,"https://ksctl.com") {
+        Ok(v) => println!("{v:?}"),
+        Err(e) => println!("{e:?}")
+    }
 
     Ok(())
 }

@@ -1,21 +1,17 @@
 package dipankardas011:httpclient@0.1.0;
 
 interface outgoing-http {
+    /*TODO(dipankar)!: need to enum types*/
     record response {
         status-code: u16, 
         headers: string,
         body: string
     }
 
-    record request-header {
-        key: string,
-        value: string
-    }
-
     record reserror {
         msg: string
     }
-    get-request: func(method: string, headers: list<request-header>, url: string) -> result<response, reserror>;
+    get-request: func(method: string, headers: list<string>, url: string) -> result<response, reserror>;
 }
 
 world http {

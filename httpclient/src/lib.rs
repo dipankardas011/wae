@@ -5,15 +5,15 @@ use anyhow::anyhow;
 use bindings::exports::dipankardas011::httpclient::outgoing_http::Guest;
 
 use bindings::exports::dipankardas011::httpclient::outgoing_http::Response as WitResponse;
+use bindings::exports::dipankardas011::httpclient::outgoing_http::Reserror as WitError;
+use bindings::exports::dipankardas011::httpclient::outgoing_http::RequestHeader as WitHeader;
 
-use wasi::http::types::Fields;
-use wasi::http::outgoing_handler::*;
-use wasi::http::types::{Scheme, Method};
+use waki::Client;
 
 struct Component;
 
 impl Guest for Component {
-    fn get_request(method: String, headers: Vec<String>, url: String) -> Result<WitResponse, ()> {
+    fn get_request(method: String, headers: Vec<WitHeader>, url: String) -> Result<WitResponse, WitError> {
         let result = execute_request(method, headers, url);
         match result {
             Ok(response) => Ok(WitResponse {
@@ -22,82 +22,42 @@ impl Guest for Component {
                 body: response.body,
             }),
             Err(e) => {
-                println!("Error: {}", e);
-                Err(())
+                println!("Error from request: {}", e);
+                Err(WitError{msg: format!("{e:?}")})
             }
         }
     }
 }
 
-fn execute_request(method: String, _headers: Vec<String>, url: String) -> Result<CustomResponse, anyhow::Error> {
-    let headers = Fields::new();
+fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String) -> Result<CustomResponse, anyhow::Error> {
+    println!("< UserRequest\n<< Method: {method}\n<< Url: {url}\n<< Headers: {usr_headers:?}\n<");
 
-    headers.append(&String::from("accept").into(), &"*/*".as_bytes().to_vec())?;
-    headers.append(&String::from("user-agent").into(), &"wasi".as_bytes().to_vec())?;
+    let mut headers: Vec<(&str, &str)> = vec![
+        ("Content-Type", "application/json"),
+        ("Accept", "*/*"),
+        ("User-Agent", "Curl/8.6.0"),
+    ];
 
-    let request = OutgoingRequest::new(headers);
 
-    if "http" == url.split("://").nth(0).unwrap() {
-        request.set_scheme(Some(&Scheme::Http)).map_err(|_| anyhow!("Invalid Scheme"))?;
-    } else if "https" == url.split("://").nth(0).unwrap() {
-        request.set_scheme(Some(&Scheme::Https)).map_err(|_| anyhow!("Invalid Scheme"))?;
-    } else {
-        return Err(anyhow!("invalid scheme"))
+    for i in 0..usr_headers.len() {
+        headers.push((usr_headers[i].key.clone().as_str(), usr_headers[i].value.clone().as_str()));
     }
 
-    let method = match method.to_uppercase().as_str() {
-        "GET" => Method::Get,
-        "POST" => Method::Post,
-        "PUT" => Method::Put,
-        "DELETE" => Method::Delete,
-        _ => return Err(anyhow!("Unsupported HTTP method")),
-    };
-    request.set_method(&method).map_err(|_| anyhow!("Invalid Method"))?;
 
-    let authority = url.split("://").nth(1).ok_or_else(|| anyhow!("Invalid URL format"))?
-        .split('/').next().ok_or_else(|| anyhow!("Invalid URL format"))?;
-    request.set_authority(Some(authority)).map_err(|_| anyhow!("Invalid Authority"))?;
+    let req = Client::new()
+        .get(&url)
+        .headers(headers);
 
-    request.set_path_with_query(Some(&url)).map_err(|_| anyhow!("Invalid URL"))?;
-
-    let future = handle(request, None);
-
-    if let Err(e) = future {
-        println!("Error in future: {e}");
-        return Err(e.into());
-    }
-    let fut = future.unwrap();
-
-    fut.subscribe().block();
-
-    let result = fut.get();
-    match result {
-        None => {
-            println!("No response");
-            return Err(anyhow!("No Response"))
+    let resp = req.send();
+    match resp {
+        Ok(v) => {
+            let status_code = v.status_code();
+            println!("status code: {}", status_code);
+            let headers = v.headers().to_owned();
+            let body = String::from_utf8(v.body().unwrap()).expect("Failed to convert to the string");
+            Ok(CustomResponse { status_code, headers: format!("{headers:?}"), body })
         }
-        Some(Err(e)) => {
-            println!("Error: {e:?}");
-            return Err(anyhow!("Error: {e:?}"))
-        }
-        Some(Ok(Err(e))) => {
-            println!("HTTP Error: {e:?}");
-            return Err(anyhow!("HTTP Error: {e:?}"))
-        }
-        Some(Ok(Ok(response))) => {
-            let status = response.status();
-            let headers = response.headers();
-            let body = response.consume().unwrap().stream().unwrap().read(10000).unwrap();
-            let body_str = String::from_utf8(body).unwrap();
-
-            println!("Response Headers: {headers:?} \n Status: {status:?} \n Body: {body_str}");
-
-            Ok(CustomResponse {
-                status_code: status as u16,
-                headers: format!("{headers:?}"),
-                body: body_str,
-            })
-        }
+        Err(e) => Err(anyhow!("Error(HTTP OUTGOING CLIENT) {e:?}"))
     }
 }
 

@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 wit-bindgen-rt = { version = "0.27.0", features = ["bitflags"] }
-waki = "0.3.0"
+wasi = "0.13.1"
 anyhow = "1.0.86"
 
 [lib]

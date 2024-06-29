@@ -14,6 +14,7 @@ pub mod exports {
                 static __FORCE_SECTION_REF: fn() =
                     super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
+                /// *TODO(dipankar)!: need to enum types*/
                 #[derive(Clone)]
                 pub struct Response {
                     pub status_code: u16,
@@ -26,19 +27,6 @@ pub mod exports {
                             .field("status-code", &self.status_code)
                             .field("headers", &self.headers)
                             .field("body", &self.body)
-                            .finish()
-                    }
-                }
-                #[derive(Clone)]
-                pub struct RequestHeader {
-                    pub key: _rt::String,
-                    pub value: _rt::String,
-                }
-                impl ::core::fmt::Debug for RequestHeader {
-                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                        f.debug_struct("RequestHeader")
-                            .field("key", &self.key)
-                            .field("value", &self.value)
                             .finish()
                     }
                 }
@@ -71,68 +59,61 @@ pub mod exports {
                     _rt::run_ctors_once();
                     let len0 = arg1;
                     let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
-                    let base7 = arg2;
-                    let len7 = arg3;
-                    let mut result7 = _rt::Vec::with_capacity(len7);
-                    for i in 0..len7 {
-                        let base = base7.add(i * 16);
-                        let e7 = {
+                    let base4 = arg2;
+                    let len4 = arg3;
+                    let mut result4 = _rt::Vec::with_capacity(len4);
+                    for i in 0..len4 {
+                        let base = base4.add(i * 8);
+                        let e4 = {
                             let l1 = *base.add(0).cast::<*mut u8>();
                             let l2 = *base.add(4).cast::<usize>();
                             let len3 = l2;
                             let bytes3 = _rt::Vec::from_raw_parts(l1.cast(), len3, len3);
-                            let l4 = *base.add(8).cast::<*mut u8>();
-                            let l5 = *base.add(12).cast::<usize>();
-                            let len6 = l5;
-                            let bytes6 = _rt::Vec::from_raw_parts(l4.cast(), len6, len6);
 
-                            RequestHeader {
-                                key: _rt::string_lift(bytes3),
-                                value: _rt::string_lift(bytes6),
-                            }
+                            _rt::string_lift(bytes3)
                         };
-                        result7.push(e7);
+                        result4.push(e4);
                     }
-                    _rt::cabi_dealloc(base7, len7 * 16, 4);
-                    let len8 = arg5;
-                    let bytes8 = _rt::Vec::from_raw_parts(arg4.cast(), len8, len8);
-                    let result9 =
-                        T::get_request(_rt::string_lift(bytes0), result7, _rt::string_lift(bytes8));
-                    let ptr10 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result9 {
+                    _rt::cabi_dealloc(base4, len4 * 8, 4);
+                    let len5 = arg5;
+                    let bytes5 = _rt::Vec::from_raw_parts(arg4.cast(), len5, len5);
+                    let result6 =
+                        T::get_request(_rt::string_lift(bytes0), result4, _rt::string_lift(bytes5));
+                    let ptr7 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    match result6 {
                         Ok(e) => {
-                            *ptr10.add(0).cast::<u8>() = (0i32) as u8;
+                            *ptr7.add(0).cast::<u8>() = (0i32) as u8;
                             let Response {
-                                status_code: status_code11,
-                                headers: headers11,
-                                body: body11,
+                                status_code: status_code8,
+                                headers: headers8,
+                                body: body8,
                             } = e;
-                            *ptr10.add(4).cast::<u16>() = (_rt::as_i32(status_code11)) as u16;
-                            let vec12 = (headers11.into_bytes()).into_boxed_slice();
+                            *ptr7.add(4).cast::<u16>() = (_rt::as_i32(status_code8)) as u16;
+                            let vec9 = (headers8.into_bytes()).into_boxed_slice();
+                            let ptr9 = vec9.as_ptr().cast::<u8>();
+                            let len9 = vec9.len();
+                            ::core::mem::forget(vec9);
+                            *ptr7.add(12).cast::<usize>() = len9;
+                            *ptr7.add(8).cast::<*mut u8>() = ptr9.cast_mut();
+                            let vec10 = (body8.into_bytes()).into_boxed_slice();
+                            let ptr10 = vec10.as_ptr().cast::<u8>();
+                            let len10 = vec10.len();
+                            ::core::mem::forget(vec10);
+                            *ptr7.add(20).cast::<usize>() = len10;
+                            *ptr7.add(16).cast::<*mut u8>() = ptr10.cast_mut();
+                        }
+                        Err(e) => {
+                            *ptr7.add(0).cast::<u8>() = (1i32) as u8;
+                            let Reserror { msg: msg11 } = e;
+                            let vec12 = (msg11.into_bytes()).into_boxed_slice();
                             let ptr12 = vec12.as_ptr().cast::<u8>();
                             let len12 = vec12.len();
                             ::core::mem::forget(vec12);
-                            *ptr10.add(12).cast::<usize>() = len12;
-                            *ptr10.add(8).cast::<*mut u8>() = ptr12.cast_mut();
-                            let vec13 = (body11.into_bytes()).into_boxed_slice();
-                            let ptr13 = vec13.as_ptr().cast::<u8>();
-                            let len13 = vec13.len();
-                            ::core::mem::forget(vec13);
-                            *ptr10.add(20).cast::<usize>() = len13;
-                            *ptr10.add(16).cast::<*mut u8>() = ptr13.cast_mut();
-                        }
-                        Err(e) => {
-                            *ptr10.add(0).cast::<u8>() = (1i32) as u8;
-                            let Reserror { msg: msg14 } = e;
-                            let vec15 = (msg14.into_bytes()).into_boxed_slice();
-                            let ptr15 = vec15.as_ptr().cast::<u8>();
-                            let len15 = vec15.len();
-                            ::core::mem::forget(vec15);
-                            *ptr10.add(8).cast::<usize>() = len15;
-                            *ptr10.add(4).cast::<*mut u8>() = ptr15.cast_mut();
+                            *ptr7.add(8).cast::<usize>() = len12;
+                            *ptr7.add(4).cast::<*mut u8>() = ptr12.cast_mut();
                         }
                     };
-                    ptr10
+                    ptr7
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
@@ -157,7 +138,7 @@ pub mod exports {
                 pub trait Guest {
                     fn get_request(
                         method: _rt::String,
-                        headers: _rt::Vec<RequestHeader>,
+                        headers: _rt::Vec<_rt::String>,
                         url: _rt::String,
                     ) -> Result<Response, Reserror>;
                 }
@@ -312,15 +293,14 @@ pub(crate) use __export_http_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.25.0:http:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 377] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xfe\x01\x01A\x02\x01\
-A\x02\x01B\x0a\x01r\x03\x0bstatus-code{\x07headerss\x04bodys\x04\0\x08response\x03\
-\0\0\x01r\x02\x03keys\x05values\x04\0\x0erequest-header\x03\0\x02\x01r\x01\x03ms\
-gs\x04\0\x08reserror\x03\0\x04\x01p\x03\x01j\x01\x01\x01\x05\x01@\x03\x06methods\
-\x07headers\x06\x03urls\0\x07\x04\0\x0bget-request\x01\x08\x04\x01-dipankardas01\
-1:httpclient/outgoing-http@0.1.0\x05\0\x04\x01$dipankardas011:httpclient/http@0.\
-1.0\x04\0\x0b\x0a\x01\0\x04http\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0d\
-wit-component\x070.208.1\x10wit-bindgen-rust\x060.25.0";
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 342] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xdb\x01\x01A\x02\x01\
+A\x02\x01B\x08\x01r\x03\x0bstatus-code{\x07headerss\x04bodys\x04\0\x08response\x03\
+\0\0\x01r\x01\x03msgs\x04\0\x08reserror\x03\0\x02\x01ps\x01j\x01\x01\x01\x03\x01\
+@\x03\x06methods\x07headers\x04\x03urls\0\x05\x04\0\x0bget-request\x01\x06\x04\x01\
+-dipankardas011:httpclient/outgoing-http@0.1.0\x05\0\x04\x01$dipankardas011:http\
+client/http@0.1.0\x04\0\x0b\x0a\x01\0\x04http\x03\0\0\0G\x09producers\x01\x0cpro\
+cessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x060.25.0";
 
 #[inline(never)]
 #[doc(hidden)]

@@ -4,7 +4,7 @@ mod bindings;
 use bindings::exports::dipankardas011::githubapi::releases::Guest;
 use serde_json::Value;
 use waki::Client;
-use anyhow;
+use anyhow::anyhow;
 
 struct Component;
 
@@ -22,8 +22,13 @@ impl Guest for Component {
 
         match resp {
             Ok(v) => {
-                println!("status code: {}", v.status_code());
+                let status_code = v.status_code() as u16;
+                println!("status code: {}", status_code);
                 let body = String::from_utf8(v.body().unwrap()).expect("Failed to convert to the string");
+                if status_code != http::StatusCode::OK {
+                    return format!("Failed as status code: {status_code}, body: {body}")
+                }
+                
                 let json: Value = serde_json::from_str(&body).unwrap();
 
                 let tag_name = json["tag_name"]
