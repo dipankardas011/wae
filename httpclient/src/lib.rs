@@ -4,11 +4,14 @@ mod bindings;
 use anyhow::anyhow;
 use bindings::exports::dipankardas011::httpclient::outgoing_http::Guest;
 
-use bindings::exports::dipankardas011::httpclient::outgoing_http::Response as WitResponse;
-use bindings::exports::dipankardas011::httpclient::outgoing_http::Reserror as WitError;
-use bindings::exports::dipankardas011::httpclient::outgoing_http::RequestHeader as WitHeader;
+use bindings::exports::dipankardas011::httpclient::outgoing_http::{
+    Response as WitResponse,
+    RequestHeader as WitHeader,
+    Reserror as WitError,
+};
 
 use waki::Client;
+use waki::header::{HeaderName, HeaderValue};
 
 struct Component;
 
@@ -32,19 +35,18 @@ impl Guest for Component {
 fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String) -> Result<CustomResponse, anyhow::Error> {
     println!("< UserRequest\n<< Method: {method}\n<< Url: {url}\n<< Headers: {usr_headers:?}\n<");
 
-    let headers: Vec<(&str, &str)> = vec![
-        ("Content-Type", "application/json"),
-        ("Accept", "*/*"),
-        ("User-Agent", "Curl/8.6.0"),
+    let mut headers: Vec<(HeaderName, HeaderValue)> = vec![
+        // (HeaderName::from_bytes("Content-Name".as_bytes())?,  HeaderValue::from_str("application/json")?),
+        // (HeaderName::from_bytes("Accept".as_bytes())?,  HeaderValue::from_str("*/*")?),
+        (HeaderName::from_bytes("User-Agent".as_bytes())?,  HeaderValue::from_str("Curl/8.6.0")?),
     ];
-
-    // for i in 0..usr_headers.len() {
-    //     let h = usr_headers[i].to_owned();
-    //     let k = String::new();
-    //     let v = String::new();
-    //     headers.push((k.as_str(), v.as_str()));
-    // }
-
+    
+    for header in usr_headers {
+        let name = HeaderName::from_bytes(header.key.as_bytes())?;
+        let value = HeaderValue::from_str(header.value.as_str())?;
+        headers.push((name, value));
+    }
+    
     let http_client = Client::new();
 
     let req = match method.to_uppercase().as_str() {
