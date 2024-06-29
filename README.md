@@ -37,20 +37,29 @@ Integrate the above two goals [1](#goal-1) [2](#goal-2)
 
 - [x] Achieved?
 
-Github Api based wit and implementation which we can use in the cli to perform some operations
+- HTTP working
+1. use `wasi:http` to create a component
 
-1. Expectation get the latest release
-- org:repo and the other things
-2. Openai api usage (TODO)
 
 ## Goal 5
 
-- [ ] Achieved?
+- [x] Achieved?
 
-Integrate the above two goals [3](#goal-3) [4](#goal-4)
+Github Api based wit and implementation which we can use in the cli to perform some operations
 
+1. Expectation get the latest release
+- org:repo and the other thing
+- using the [4](#goal-4)
+2. Openai api usage (**TODO**)
 
 ## Goal 6
+
+- [ ] Achieved?
+
+Integrate the above two goals [3](#goal-3) [4](#goal-4) [5](#goal-5)
+
+
+## Goal 7
 
 - [ ] Achieved?
 
@@ -59,7 +68,7 @@ Integrate the above two goals [3](#goal-3) [4](#goal-4)
 
 https://docs.watttime.org/
 
-## Goal 7
+## Goal 8
 
 - [ ] Achieved?
 
