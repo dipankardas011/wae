@@ -23,4 +23,10 @@ lto = true
 [package.metadata.component]
 package = "dipankardas011:githubapi"
 
+[package.metadata.component.target]
+path = "wit"
+
+[package.metadata.component.target.dependencies]
+"dipankardas011:httpclient" = { path = "../httpclient/wit" }
+
 [package.metadata.component.dependencies]

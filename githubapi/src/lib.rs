@@ -3,8 +3,10 @@ mod bindings;
 
 use bindings::exports::dipankardas011::githubapi::releases::Guest;
 use serde_json::Value;
-use waki::Client;
-use anyhow::anyhow;
+use bindings::dipankardas011::httpclient::outgoing_http::{
+    get_request,
+    RequestHeader,
+};
 
 struct Component;
 
@@ -14,17 +16,22 @@ impl Guest for Component {
         let url = format!("https://api.github.com/repos/{org}/{proj}/releases/latest");
         println!("Url: {url}");
 
-        let req = Client::new()
-            .get(&url)
-            .headers([("Content-Type", "application/json"), ("Accept", "*/*"), ("User-Agent", "Curl/8.6.0")]);
+        let headers = vec![
+            RequestHeader{
+                key: "Content-Type".to_string(),
+                value: "application/json".to_string(),
+            },
+            RequestHeader{
+                key: "Accept".to_string(),
+                value: "*/*".to_string(),
+            },
+        ];
 
-        let resp = req.send();
-
-        match resp {
+        match get_request("GET", &headers, &url) {
             Ok(v) => {
-                let status_code = v.status_code() as u16;
+                let status_code = v.status_code as u16;
                 println!("status code: {}", status_code);
-                let body = String::from_utf8(v.body().unwrap()).expect("Failed to convert to the string");
+                let body = v.body;
                 if status_code != http::StatusCode::OK {
                     return format!("Failed as status code: {status_code}, body: {body}")
                 }

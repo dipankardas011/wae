@@ -84,189 +84,6 @@ pub mod dipankardas011 {
             }
         }
     }
-    #[allow(dead_code)]
-    pub mod httpclient {
-        #[allow(dead_code, clippy::all)]
-        pub mod outgoing_http {
-            #[used]
-            #[doc(hidden)]
-            #[cfg(target_arch = "wasm32")]
-            static __FORCE_SECTION_REF: fn() =
-                super::super::super::__link_custom_section_describing_imports;
-            use super::super::super::_rt;
-            #[derive(Clone)]
-            pub struct Response {
-                pub status_code: u16,
-                pub headers: _rt::String,
-                pub body: _rt::String,
-            }
-            impl ::core::fmt::Debug for Response {
-                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                    f.debug_struct("Response")
-                        .field("status-code", &self.status_code)
-                        .field("headers", &self.headers)
-                        .field("body", &self.body)
-                        .finish()
-                }
-            }
-            #[derive(Clone)]
-            pub struct RequestHeader {
-                pub key: _rt::String,
-                pub value: _rt::String,
-            }
-            impl ::core::fmt::Debug for RequestHeader {
-                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                    f.debug_struct("RequestHeader")
-                        .field("key", &self.key)
-                        .field("value", &self.value)
-                        .finish()
-                }
-            }
-            #[derive(Clone)]
-            pub struct Reserror {
-                pub msg: _rt::String,
-            }
-            impl ::core::fmt::Debug for Reserror {
-                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                    f.debug_struct("Reserror").field("msg", &self.msg).finish()
-                }
-            }
-            impl ::core::fmt::Display for Reserror {
-                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                    write!(f, "{:?}", self)
-                }
-            }
-            impl std::error::Error for Reserror {}
-            #[allow(unused_unsafe, clippy::all)]
-            pub fn get_request(
-                method: &str,
-                headers: &[RequestHeader],
-                url: &str,
-            ) -> Result<Response, Reserror> {
-                unsafe {
-                    #[repr(align(4))]
-                    struct RetArea([::core::mem::MaybeUninit<u8>; 24]);
-                    let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 24]);
-                    let vec0 = method;
-                    let ptr0 = vec0.as_ptr().cast::<u8>();
-                    let len0 = vec0.len();
-                    let vec4 = headers;
-                    let len4 = vec4.len();
-                    let layout4 = _rt::alloc::Layout::from_size_align_unchecked(vec4.len() * 16, 4);
-                    let result4 = if layout4.size() != 0 {
-                        let ptr = _rt::alloc::alloc(layout4).cast::<u8>();
-                        if ptr.is_null() {
-                            _rt::alloc::handle_alloc_error(layout4);
-                        }
-                        ptr
-                    } else {
-                        {
-                            ::core::ptr::null_mut()
-                        }
-                    };
-                    for (i, e) in vec4.into_iter().enumerate() {
-                        let base = result4.add(i * 16);
-                        {
-                            let RequestHeader {
-                                key: key1,
-                                value: value1,
-                            } = e;
-                            let vec2 = key1;
-                            let ptr2 = vec2.as_ptr().cast::<u8>();
-                            let len2 = vec2.len();
-                            *base.add(4).cast::<usize>() = len2;
-                            *base.add(0).cast::<*mut u8>() = ptr2.cast_mut();
-                            let vec3 = value1;
-                            let ptr3 = vec3.as_ptr().cast::<u8>();
-                            let len3 = vec3.len();
-                            *base.add(12).cast::<usize>() = len3;
-                            *base.add(8).cast::<*mut u8>() = ptr3.cast_mut();
-                        }
-                    }
-                    let vec5 = url;
-                    let ptr5 = vec5.as_ptr().cast::<u8>();
-                    let len5 = vec5.len();
-                    let ptr6 = ret_area.0.as_mut_ptr().cast::<u8>();
-                    #[cfg(target_arch = "wasm32")]
-                    #[link(wasm_import_module = "dipankardas011:httpclient/outgoing-http@0.1.0")]
-                    extern "C" {
-                        #[link_name = "get-request"]
-                        fn wit_import(
-                            _: *mut u8,
-                            _: usize,
-                            _: *mut u8,
-                            _: usize,
-                            _: *mut u8,
-                            _: usize,
-                            _: *mut u8,
-                        );
-                    }
-
-                    #[cfg(not(target_arch = "wasm32"))]
-                    fn wit_import(
-                        _: *mut u8,
-                        _: usize,
-                        _: *mut u8,
-                        _: usize,
-                        _: *mut u8,
-                        _: usize,
-                        _: *mut u8,
-                    ) {
-                        unreachable!()
-                    }
-                    wit_import(
-                        ptr0.cast_mut(),
-                        len0,
-                        result4,
-                        len4,
-                        ptr5.cast_mut(),
-                        len5,
-                        ptr6,
-                    );
-                    let l7 = i32::from(*ptr6.add(0).cast::<u8>());
-                    if layout4.size() != 0 {
-                        _rt::alloc::dealloc(result4.cast(), layout4);
-                    }
-                    match l7 {
-                        0 => {
-                            let e = {
-                                let l8 = i32::from(*ptr6.add(4).cast::<u16>());
-                                let l9 = *ptr6.add(8).cast::<*mut u8>();
-                                let l10 = *ptr6.add(12).cast::<usize>();
-                                let len11 = l10;
-                                let bytes11 = _rt::Vec::from_raw_parts(l9.cast(), len11, len11);
-                                let l12 = *ptr6.add(16).cast::<*mut u8>();
-                                let l13 = *ptr6.add(20).cast::<usize>();
-                                let len14 = l13;
-                                let bytes14 = _rt::Vec::from_raw_parts(l12.cast(), len14, len14);
-
-                                Response {
-                                    status_code: l8 as u16,
-                                    headers: _rt::string_lift(bytes11),
-                                    body: _rt::string_lift(bytes14),
-                                }
-                            };
-                            Ok(e)
-                        }
-                        1 => {
-                            let e = {
-                                let l15 = *ptr6.add(4).cast::<*mut u8>();
-                                let l16 = *ptr6.add(8).cast::<usize>();
-                                let len17 = l16;
-                                let bytes17 = _rt::Vec::from_raw_parts(l15.cast(), len17, len17);
-
-                                Reserror {
-                                    msg: _rt::string_lift(bytes17),
-                                }
-                            };
-                            Err(e)
-                        }
-                        _ => _rt::invalid_enum_discriminant(),
-                    }
-                }
-            }
-        }
-    }
 }
 mod _rt {
     pub use alloc_crate::string::String;
@@ -348,32 +165,20 @@ mod _rt {
             String::from_utf8_unchecked(bytes)
         }
     }
-    pub use alloc_crate::alloc;
-    pub unsafe fn invalid_enum_discriminant<T>() -> T {
-        if cfg!(debug_assertions) {
-            panic!("invalid enum discriminant")
-        } else {
-            core::hint::unreachable_unchecked()
-        }
-    }
     extern crate alloc as alloc_crate;
 }
 
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.25.0:app:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 519] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x8d\x03\x01A\x02\x01\
-A\x06\x01B\x02\x01@\x01\x06lengthy\0s\x04\0\x0fgenerate-random\x01\0\x03\x01$dip\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 312] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xbe\x01\x01A\x02\x01\
+A\x04\x01B\x02\x01@\x01\x06lengthy\0s\x04\0\x0fgenerate-random\x01\0\x03\x01$dip\
 ankardas011:crypto/password@0.1.0\x05\0\x01B\x02\x01@\x02\x03orgs\x04projs\0s\x04\
 \0\x0cfetch-latest\x01\0\x03\x01'dipankardas011:githubapi/releases@0.1.0\x05\x01\
-\x01B\x0a\x01r\x03\x0bstatus-code{\x07headerss\x04bodys\x04\0\x08response\x03\0\0\
-\x01r\x02\x03keys\x05values\x04\0\x0erequest-header\x03\0\x02\x01r\x01\x03msgs\x04\
-\0\x08reserror\x03\0\x04\x01p\x03\x01j\x01\x01\x01\x05\x01@\x03\x06methods\x07he\
-aders\x06\x03urls\0\x07\x04\0\x0bget-request\x01\x08\x03\x01-dipankardas011:http\
-client/outgoing-http@0.1.0\x05\x02\x04\x01\x16dipankardas011:cli/app\x04\0\x0b\x09\
-\x01\0\x03app\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x07\
-0.208.1\x10wit-bindgen-rust\x060.25.0";
+\x04\x01\x16dipankardas011:cli/app\x04\0\x0b\x09\x01\0\x03app\x03\0\0\0G\x09prod\
+ucers\x01\x0cprocessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x06\
+0.25.0";
 
 #[inline(never)]
 #[doc(hidden)]

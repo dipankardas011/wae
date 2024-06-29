@@ -2,7 +2,6 @@
 mod bindings;
 
 use std::env;
-use bindings::dipankardas011::httpclient::outgoing_http::RequestHeader;
 use clap::Parser;
 use std::fs;
 use std::time::{Duration, SystemTime};
@@ -22,13 +21,12 @@ struct CommandToPerform {
 
 const FILE_PATH: &str = "README.md";
 const OP_GENERATE_RANDOM_PASSWORD: &str = "gen_rand_pass";
-const OP_PROJ_LATEST_RELEASE: &str = "pro_latest_release";
+const OP_PROJ_LATEST_RELEASE: &str = "proj_latest_release";
 
 
 use bindings::dipankardas011::{
     crypto::password::generate_random,
     githubapi::releases::fetch_latest,
-    httpclient::outgoing_http::{get_request}
 };
 
 
@@ -96,18 +94,6 @@ async fn main() -> Result<()> {
                 println!("Error: {e:?}");
             }
         }
-    }
-
-    let headers = vec![
-        RequestHeader{
-            key: "NICE".to_string(),
-            value: "WASISII".to_string(),
-        },
-    ];
-
-    match get_request("get", &headers,"https://ksctl.com") {
-        Ok(v) => println!("> Response\n>> status_code={}\n>> Headers={:#?}\n>> Body={:#?}\n>EOF\n",v.status_code,v.headers, v.body),
-        Err(e) => println!("{e:?}")
     }
 
     Ok(())

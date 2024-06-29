@@ -3,6 +3,5 @@ package dipankardas011:cli;
 world app {
     import dipankardas011:crypto/password@0.1.0;
     import dipankardas011:githubapi/releases@0.1.0;
-    import dipankardas011:httpclient/outgoing-http@0.1.0;
 }
 

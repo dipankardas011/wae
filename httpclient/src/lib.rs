@@ -62,7 +62,6 @@ fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String) -> 
     match resp {
         Ok(v) => {
             let status_code = v.status_code();
-            println!("status code: {}", status_code);
             let headers = v.headers().to_owned();
             let body = String::from_utf8(v.body().unwrap()).expect("Failed to convert to the string");
             Ok(CustomResponse { status_code, headers: format!("{headers:?}"), body })

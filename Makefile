@@ -5,10 +5,10 @@ build_cli:
 	@echo "PASS: [+] Build for cli/"
 	wac plug cli/target/wasm32-wasi/release/cli.wasm \
 		--plug crypto/crypto.wasm \
-		--plug githubapi/target/wasm32-wasi/release/githubapi.wasm \
+		--plug githubapi-composed.wasm \
 		--plug httpclient/target/wasm32-wasi/release/httpclient.wasm \
 		-o composed.wasm
-	@echo "PASS: [+] wac plug"
+	@echo "PASS: [+] wac plug for cli/"
 
 .PHONY: build_crypto
 build_crypto:
@@ -25,6 +25,10 @@ build_github_api:
 	cd githubapi && \
 		cargo component build --release
 	@echo "PASS: [+] Build for githubapi/"
+	wac plug githubapi/target/wasm32-wasi/release/githubapi.wasm \
+		--plug httpclient/target/wasm32-wasi/release/httpclient.wasm \
+		-o githubapi-composed.wasm
+	@echo "PASS: [+] wac plug for githubapi/"
 
 .PHONY: build_httpclient
 build_httpclient:
@@ -33,7 +37,7 @@ build_httpclient:
 	@echo "PASS: [+] Build for httpclient/"
 
 .PHONY: build
-build: build_crypto build_github_api build_httpclient build_cli
+build: build_crypto build_httpclient build_github_api build_cli
 
 .PHONY: run_gen_pass
 run_gen_pass:
@@ -45,8 +49,13 @@ run_demo:
 
 .PHONY: run_get_latest_release
 run_get_latest_release:
-	wasmtime run -S http composed.wasm -n dipankar -o pro_latest_release
+	wasmtime run -S http composed.wasm -n dipankar -o proj_latest_release
 
 .PHONY: clean
 clean:
-	rm -vrf cli/target crypto/crypto.wasm githubapi/githubapi.wasm composed.wasm
+	rm -vrf \
+		cli/target \
+		crypto/crypto.wasm \
+		githubapi/target \
+		composed.wasm \
+		githubapi-composed.wasm

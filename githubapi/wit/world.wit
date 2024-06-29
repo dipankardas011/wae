@@ -6,4 +6,5 @@ interface releases {
 
 world project {
     export releases;
+    import dipankardas011:httpclient/outgoing-http@0.1.0;
 }
