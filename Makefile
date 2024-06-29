@@ -57,5 +57,7 @@ clean:
 		cli/target \
 		crypto/crypto.wasm \
 		githubapi/target \
+		httpclient/target \
+		wasihttpclient/target \
 		composed.wasm \
 		githubapi-composed.wasm
