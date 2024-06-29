@@ -45,7 +45,7 @@ run_demo:
 
 .PHONY: run_get_latest_release
 run_get_latest_release:
-	wasmtime run -S inherit-network -S http composed.wasm -n dipankar -o pro_latest_release
+	wasmtime run -S http composed.wasm -n dipankar -o pro_latest_release
 
 .PHONY: clean
 clean:

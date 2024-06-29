@@ -32,21 +32,29 @@ impl Guest for Component {
 fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String) -> Result<CustomResponse, anyhow::Error> {
     println!("< UserRequest\n<< Method: {method}\n<< Url: {url}\n<< Headers: {usr_headers:?}\n<");
 
-    let mut headers: Vec<(&str, &str)> = vec![
+    let headers: Vec<(&str, &str)> = vec![
         ("Content-Type", "application/json"),
         ("Accept", "*/*"),
         ("User-Agent", "Curl/8.6.0"),
     ];
 
+    // for i in 0..usr_headers.len() {
+    //     let h = usr_headers[i].to_owned();
+    //     let k = String::new();
+    //     let v = String::new();
+    //     headers.push((k.as_str(), v.as_str()));
+    // }
 
-    for i in 0..usr_headers.len() {
-        headers.push((usr_headers[i].key.clone().as_str(), usr_headers[i].value.clone().as_str()));
-    }
+    let http_client = Client::new();
 
-
-    let req = Client::new()
-        .get(&url)
-        .headers(headers);
+    let req = match method.to_uppercase().as_str() {
+        "GET" => http_client.get(&url).headers(headers),
+        "POST" => http_client.post(&url).headers(headers),
+        "PUT" => http_client.put(&url).headers(headers),
+        "DELETE" => http_client.delete(&url).headers(headers),
+        "PATCH" => http_client.patch(&url).headers(headers),
+        _ => return Err(anyhow!("Unsupported HTTP method {method}")),
+    };
 
     let resp = req.send();
     match resp {

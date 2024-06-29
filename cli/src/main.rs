@@ -35,7 +35,7 @@ use bindings::dipankardas011::{
 use anyhow::Result;
 
 async fn hh() {
-    println!(" @@ Called Async GG @@");
+    println!("@@ Welcome to CLI wonderland @@");
 }
 
 #[tokio::main(flavor = "current_thread")] // it is used as wasm32-wasi doesn't support
@@ -106,7 +106,7 @@ async fn main() -> Result<()> {
     ];
 
     match get_request("get", &headers,"https://ksctl.com") {
-        Ok(v) => println!("{v:?}"),
+        Ok(v) => println!("> Response\n>> status_code={}\n>> Headers={:#?}\n>> Body={:#?}\n>EOF\n",v.status_code,v.headers, v.body),
         Err(e) => println!("{e:?}")
     }
 
