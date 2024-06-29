@@ -7,7 +7,7 @@ componentize-py --wit-path wit/world.wit --world crypto bindings crypto_guest
 
 once done we will make a compoent out
 ```bash
-componentize-py -d wit/world.wit -w crypto componentize --stub-wasi app_crypto -o crypto.wasm
+componentize-py -d wit/world.wit -w crypto componentize app_crypto -o crypto.wasm
 ```
 
 how to use host thing
