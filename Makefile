@@ -1,3 +1,15 @@
+.PHONY: build_cliv2
+build_cliv2:
+	cd cli && \
+		cargo component build --release
+	@echo "PASS: [+] Build for cli/"
+	wac plug cli/target/wasm32-wasi/release/cli.wasm \
+		--plug crypto/crypto.wasm \
+		--plug githubapiv2-composed.wasm \
+		--plug httpclient/target/wasm32-wasi/release/httpclient.wasm \
+		-o composed.wasm
+	@echo "PASS: [+] wac plug for cli/"
+
 .PHONY: build_cli
 build_cli:
 	cd cli && \
@@ -20,6 +32,20 @@ build_crypto:
 			-o crypto.wasm
 	@echo "PASS: [+] Build for crypto/"
 
+.PHONY: build_github_apiv2
+build_github_apiv2:
+	cd githubapiv2 && \
+		componentize-py \
+			-d wit \
+			-w project \
+			componentize app \
+			-o githubapiv2.wasm
+	@echo "PASS: [+] Build for githubapiv2/"
+	wac plug githubapiv2/githubapiv2.wasm \
+		--plug httpclient/target/wasm32-wasi/release/httpclient.wasm \
+		-o githubapiv2-composed.wasm
+	@echo "PASS: [+] wac plug for githubapiv2/"
+
 .PHONY: build_github_api
 build_github_api:
 	cd githubapi && \
@@ -38,6 +64,9 @@ build_httpclient:
 
 .PHONY: build
 build: build_crypto build_httpclient build_github_api build_cli
+
+.PHONY: buildv2
+buildv2: build_crypto build_httpclient build_github_apiv2 build_cliv2
 
 .PHONY: run_gen_pass
 run_gen_pass:

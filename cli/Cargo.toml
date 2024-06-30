@@ -27,6 +27,7 @@ path = "wit"
 [package.metadata.component.target.dependencies]
 "dipankardas011:crypto" = { path = "../crypto/wit" }
 "dipankardas011:githubapi" = { path = "../githubapi/wit" }
+"dipankardas011:githubapiv2" = { path = "../githubapiv2/wit" }
 "dipankardas011:httpclient" = { path = "../httpclient/wit" }
 
 [package.metadata.component.dependencies]

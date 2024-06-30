@@ -27,6 +27,7 @@ const OP_PROJ_LATEST_RELEASE: &str = "proj_latest_release";
 use bindings::dipankardas011::{
     crypto::password::generate_random,
     githubapi::releases::fetch_latest,
+    githubapiv2::releases::fetch_latest as fetch_latest_v2,
 };
 
 
@@ -66,7 +67,7 @@ async fn main() -> Result<()> {
         std::io::stdin().read_line(&mut input_proj).expect("Failed to read line");
         let proj: String = input_proj.trim().parse().expect("invalid organization");
 
-        let ver = fetch_latest(&org, &proj);
+        let ver = fetch_latest_v2(&org, &proj);
         println!("Latest version: {ver}");
 
     } else {
