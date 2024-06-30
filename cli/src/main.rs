@@ -26,7 +26,6 @@ const OP_PROJ_LATEST_RELEASE: &str = "proj_latest_release";
 
 use bindings::dipankardas011::{
     crypto::password::generate_random,
-    githubapi::releases::fetch_latest,
     githubapiv2::releases::fetch_latest as fetch_latest_v2,
 };
 

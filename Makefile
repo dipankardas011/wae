@@ -89,4 +89,5 @@ clean:
 		httpclient/target \
 		wasihttpclient/target \
 		composed.wasm \
-		githubapi-composed.wasm
+		githubapi-composed.wasm \
+		githubapiv2-composed.wasm
