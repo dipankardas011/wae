@@ -6,7 +6,6 @@ build_cliv2:
 	wac plug cli/target/wasm32-wasi/release/cli.wasm \
 		--plug crypto/crypto.wasm \
 		--plug githubapiv2-composed.wasm \
-		--plug httpclient/target/wasm32-wasi/release/httpclient.wasm \
 		-o composed.wasm
 	@echo "PASS: [+] wac plug for cli/"
 
@@ -63,10 +62,10 @@ build_httpclient:
 	@echo "PASS: [+] Build for httpclient/"
 
 .PHONY: build
-build: build_crypto build_httpclient build_github_api build_cli
+build: build_httpclient build_crypto build_github_api build_cli
 
 .PHONY: buildv2
-buildv2: build_crypto build_httpclient build_github_apiv2 build_cliv2
+buildv2: build_httpclient build_crypto build_github_apiv2 build_cliv2
 
 .PHONY: run_gen_pass
 run_gen_pass:
@@ -86,6 +85,7 @@ clean:
 		cli/target \
 		crypto/crypto.wasm \
 		githubapi/target \
+		githubapiv2/githubapiv2.wasm \
 		httpclient/target \
 		wasihttpclient/target \
 		composed.wasm \
