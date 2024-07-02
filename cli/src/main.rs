@@ -48,7 +48,6 @@ async fn main() -> Result<()> {
         println!(" > Enter Length of Password");
         let mut input = String::new();
         std::io::stdin().read_line(&mut input).expect("Failed to read line");
-        std::io::stdin().read_line(&mut input).expect("Failed to read line");
         let length_pass: u32 = input.trim().parse().expect("Invalid Input");
 
         let gen_pass = generate_random(length_pass);
