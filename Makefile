@@ -66,11 +66,11 @@ build_openai:
 			-w genai \
 			componentize app \
 			-o openai.wasm
-	@echo -e "${green}PASS${clear} Build for githubapi/"
+	@echo -e "${green}PASS${clear} Build for openai/"
 	wac plug openai/openai.wasm \
 		--plug httpclient/target/wasm32-wasi/release/httpclient.wasm \
 		-o openai-composed.wasm
-	@echo -e "${green}PASS${clear} wac plug for githubapi/"
+	@echo -e "${green}PASS${clear} wac plug for openai/"
 
 .PHONY: build_httpclient
 build_httpclient:
@@ -94,6 +94,10 @@ run_demo:
 .PHONY: run_get_latest_release
 run_get_latest_release:
 	wasmtime run -S http composed.wasm -n dipankar --op githubapi
+
+.PHONY: run_openai
+run_openai:
+	wasmtime run -S http composed.wasm -n dipankar --op openai
 
 .PHONY: clean
 clean:

@@ -28,5 +28,6 @@ path = "wit"
 "dipankardas011:crypto" = { path = "../crypto/wit" }
 "dipankardas011:githubapi" = { path = "../githubapi/wit" }
 "dipankardas011:httpclient" = { path = "../httpclient/wit" }
+"dipankardas011:openai" = { path = "../openai/wit" }
 
 [package.metadata.component.dependencies]

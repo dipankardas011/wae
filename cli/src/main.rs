@@ -14,7 +14,7 @@ struct CommandToPerform {
     #[arg(short = 'n', long = "name")]
     name: String,
 
-    #[arg(short='o', long="op", value_parser=[OP_CRYPTO, OP_GITHUBAPI, OP_DEMO], default_value_t=String::from("demo"))]
+    #[arg(short='o', long="op", value_parser=[OP_CRYPTO, OP_GITHUBAPI, OP_DEMO, OP_OPENAI], default_value_t=OP_DEMO.to_string())]
     operation: String,
 }
 
@@ -22,16 +22,18 @@ struct CommandToPerform {
 const FILE_PATH: &str = "README.md";
 const OP_CRYPTO: &str = "crypto";
 const OP_GITHUBAPI: &str = "githubapi";
+const OP_OPENAI: &str = "openai";
 const OP_DEMO: &str = "demo";
 
 
 use bindings::dipankardas011::{
     crypto::password::generate_random,
     githubapi::releases,
+    openai::llm,
 };
 
 
-use anyhow::{Result};
+use anyhow::Result;
 
 async fn hh() {
     println!("@@ Welcome to CLI wonderland @@");
@@ -46,6 +48,15 @@ async fn main() -> Result<()> {
     hh().await;
 
     match args.operation.as_str() {
+        OP_OPENAI => {
+            println!(" > Enter your Prompt");
+            let mut input_org = String::new();
+            std::io::stdin().read_line(&mut input_org).expect("Failed to read line");
+            let prompt: String = input_org.trim().parse().expect("invalid prompt");
+            let generated_output = llm::text_to_text(&prompt);
+            println!("Output\n{generated_output}")
+            
+        }
         OP_CRYPTO => {
             println!(" > Enter Length of Password");
             let mut input = String::new();
