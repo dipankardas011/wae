@@ -61,15 +61,15 @@ build: build_httpclient build_crypto build_github_api build_cli
 
 .PHONY: run_gen_pass
 run_gen_pass:
-	wasmtime run -S cli -S http composed.wasm -n password-gen -o gen_rand_pass
+	wasmtime run -S cli -S http composed.wasm -n password-gen -o crypto
 
 .PHONY: run_demo
 run_demo:
-	wasmtime run -S cli -S http --env OPENAI_API_KEY="ABCD1234" --dir=. composed.wasm -n dipankar -o demo
+	wasmtime run -S cli -S http --env OPENAI_API_KEY="ABCD1234" --dir=. composed.wasm -n dipankar --op demo
 
 .PHONY: run_get_latest_release
 run_get_latest_release:
-	wasmtime run -S http composed.wasm -n dipankar -o proj_latest_release
+	wasmtime run -S http composed.wasm -n dipankar --op githubapi
 
 .PHONY: clean
 clean:
