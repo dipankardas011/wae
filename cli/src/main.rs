@@ -27,11 +27,11 @@ const OP_DEMO: &str = "demo";
 
 use bindings::dipankardas011::{
     crypto::password::generate_random,
-    githubapi::releases::fetch_latest,
+    githubapi::releases,
 };
 
 
-use anyhow::Result;
+use anyhow::{Result};
 
 async fn hh() {
     println!("@@ Welcome to CLI wonderland @@");
@@ -57,6 +57,15 @@ async fn main() -> Result<()> {
             println!("Created password '{gen_pass}'");
         }
         OP_GITHUBAPI => {
+
+            println!("> Enter [1] latest release [2] contributors [3] stars");
+            let mut input = String::new();
+            std::io::stdin().read_line(&mut input).expect("Failed to read line");
+            let choice: i32 = input.trim().parse().expect("Invalid Input");
+            if choice < 1 || choice > 3 {
+                eprintln!("Invalid choice");
+            }
+
             println!(" > Enter Organization Name");
             let mut input_org = String::new();
             std::io::stdin().read_line(&mut input_org).expect("Failed to read line");
@@ -67,8 +76,19 @@ async fn main() -> Result<()> {
             std::io::stdin().read_line(&mut input_proj).expect("Failed to read line");
             let proj: String = input_proj.trim().parse().expect("invalid organization");
 
-            let ver = fetch_latest(&org, &proj);
-            println!("Latest version: {ver}");
+            if choice == 1 {
+                let ver = releases::get_latest_release(&org, &proj);
+                println!("Latest version: {ver}");
+            }
+            else if choice ==2 {
+                let contrib = releases::get_contributors(&org, &proj);
+                println!("Contributors\n{contrib}");
+            }
+            else {
+                let stars = releases::get_stars(&org, &proj);
+                println!("Total Stars: {stars}");
+            }
+
         }
         OP_DEMO => {
             println!("Your Name: {}, Op: {}", args.name, args.operation);
