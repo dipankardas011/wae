@@ -15,7 +15,7 @@ interface outgoing-http {
     record reserror {
         msg: string
     }
-    get-request: func(method: string, headers: list<request-header>, url: string) -> result<response, reserror>;
+    get-request: func(method: string, headers: list<request-header>, url: string, body: option<list<u8>>) -> result<response, reserror>;
 }
 
 world http {

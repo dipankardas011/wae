@@ -1,7 +1,9 @@
 package dipankardas011:githubapi@0.1.0;
 
 interface releases {
-    fetch-latest: func(org: string, proj: string) -> string;
+    get-latest-release: func(org: string, proj: string) -> string;
+    get-contributors: func(org: string, proj: string) -> string;
+    get-stars: func(org: string, proj: string) -> u16;
 }
 
 world project {

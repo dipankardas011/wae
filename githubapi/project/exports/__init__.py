@@ -10,7 +10,15 @@ from ..types import Result, Ok, Err, Some
 class Releases(Protocol):
 
     @abstractmethod
-    def fetch_latest(self, org: str, proj: str) -> str:
+    def get_latest_release(self, org: str, proj: str) -> str:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_contributors(self, org: str, proj: str) -> str:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_stars(self, org: str, proj: str) -> int:
         raise NotImplementedError
 
 
