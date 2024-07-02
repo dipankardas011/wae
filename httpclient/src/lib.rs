@@ -16,8 +16,8 @@ use waki::header::{HeaderName, HeaderValue};
 struct Component;
 
 impl Guest for Component {
-    fn get_request(method: String, headers: Vec<WitHeader>, url: String) -> Result<WitResponse, WitError> {
-        let result = execute_request(method, headers, url);
+    fn get_request(method: String, headers: Vec<WitHeader>, url: String, raw_body: Option<Vec<u8>>) -> Result<WitResponse, WitError> {
+        let result = execute_request(method, headers, url, raw_body);
         match result {
             Ok(response) => Ok(WitResponse {
                 status_code: response.status_code,
@@ -32,29 +32,52 @@ impl Guest for Component {
     }
 }
 
-fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String) -> Result<CustomResponse, anyhow::Error> {
+fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String, raw_body: Option<Vec<u8>>) -> Result<CustomResponse, anyhow::Error> {
     println!("< UserRequest\n<< Method: {method}\n<< Url: {url}\n<\n");
 
     let mut headers: Vec<(HeaderName, HeaderValue)> = vec![
-        // (HeaderName::from_bytes("Content-Name".as_bytes())?,  HeaderValue::from_str("application/json")?),
-        // (HeaderName::from_bytes("Accept".as_bytes())?,  HeaderValue::from_str("*/*")?),
         (HeaderName::from_bytes("User-Agent".as_bytes())?,  HeaderValue::from_str("Curl/8.6.0")?),
     ];
-    
+
     for header in usr_headers {
         let name = HeaderName::from_bytes(header.key.as_bytes())?;
         let value = HeaderValue::from_str(header.value.as_str())?;
         headers.push((name, value));
     }
-    
+
     let http_client = Client::new();
 
     let req = match method.to_uppercase().as_str() {
-        "GET" => http_client.get(&url).headers(headers),
-        "POST" => http_client.post(&url).headers(headers),
-        "PUT" => http_client.put(&url).headers(headers),
-        "DELETE" => http_client.delete(&url).headers(headers),
-        "PATCH" => http_client.patch(&url).headers(headers),
+        "GET" => {
+            match raw_body {
+                Some(r_b) => http_client.get(&url).headers(headers).body(r_b),
+                None => http_client.get(&url).headers(headers)
+            }
+        },
+        "POST" => {
+            match raw_body {
+                Some(r_b) => http_client.post(&url).headers(headers).body(r_b),
+                None => http_client.post(&url).headers(headers)
+            }
+        },
+        "PUT" => {
+            match raw_body {
+                Some(r_b) => http_client.put(&url).headers(headers).body(r_b),
+                None => http_client.put(&url).headers(headers)
+            }
+        },
+        "DELETE" => {
+            match raw_body {
+                Some(r_b) => http_client.delete(&url).headers(headers).body(r_b),
+                None => http_client.delete(&url).headers(headers)
+            }
+        },
+        "PATCH" => {
+            match raw_body {
+                Some(r_b) => http_client.patch(&url).headers(headers).body(r_b),
+                None => http_client.patch(&url).headers(headers)
+            }
+        },
         _ => return Err(anyhow!("Unsupported HTTP method {method}")),
     };
 

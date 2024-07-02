@@ -10,7 +10,9 @@ gen-componentize-py-crypto:
 
 .PHONY: gen-componentize-py-githubapi
 gen-componentize-py-githubapi:
-	cd githubapi && rm -rf project && \
+	cd githubapi && \
+		wit-deps && \
+		rm -rf project && \
 		componentize-py --wit-path wit --world project bindings .
 
 .PHONY: build_cli

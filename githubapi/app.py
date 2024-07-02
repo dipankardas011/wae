@@ -14,7 +14,7 @@ class Releases(exports.Releases):
                 outgoing_http.RequestHeader(
                     key="Content-Type", value="application/json",
                 ),
-            ], url)
+            ], url, None)
             if http_res.status_code != 200:
                 return f"StatusCode: {http_res.status_code}, Reason: {http_res.body}"
 
@@ -33,7 +33,7 @@ class Releases(exports.Releases):
                 outgoing_http.RequestHeader(
                     key="Content-Type", value="application/json",
                 ),
-            ], url)
+            ], url, None)
             if http_res.status_code != 200:
                 return f"StatusCode: {http_res.status_code}, Reason: {http_res.body}"
             data = json.loads(http_res.body)
@@ -63,7 +63,7 @@ class Releases(exports.Releases):
                 outgoing_http.RequestHeader(
                     key="Accept", value="application/vnd.github+json",
                 )
-            ], url)
+            ], url, None)
             if http_res.status_code != 200:
                 print(f"StatusCode: {http_res.status_code}, Reason: {http_res.body}")
                 return -999
@@ -81,11 +81,5 @@ class Releases(exports.Releases):
         except Exception as e:
             print(f"Caught Exception: {e}")
             traceback.print_exc()
-            return "Failed to get the response"
-
-    # GET /repos/{owner}/{repo}/contributors
-    # GET /repos/{owner}/{repo}/stargazers
-
-    # some of the interesting json printing pprint
-    # need to check if the env var is set for the github api call to work when its needed
-    # coloring the logs colorama
+            print("Failed to get the response")
+            return -999

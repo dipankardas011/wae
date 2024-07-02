@@ -66,6 +66,9 @@ pub mod exports {
                     arg3: usize,
                     arg4: *mut u8,
                     arg5: usize,
+                    arg6: i32,
+                    arg7: *mut u8,
+                    arg8: usize,
                 ) -> *mut u8 {
                     #[cfg(target_arch = "wasm32")]
                     _rt::run_ctors_once();
@@ -96,43 +99,58 @@ pub mod exports {
                     _rt::cabi_dealloc(base7, len7 * 16, 4);
                     let len8 = arg5;
                     let bytes8 = _rt::Vec::from_raw_parts(arg4.cast(), len8, len8);
-                    let result9 =
-                        T::get_request(_rt::string_lift(bytes0), result7, _rt::string_lift(bytes8));
-                    let ptr10 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result9 {
+                    let result10 = T::get_request(
+                        _rt::string_lift(bytes0),
+                        result7,
+                        _rt::string_lift(bytes8),
+                        match arg6 {
+                            0 => None,
+                            1 => {
+                                let e = {
+                                    let len9 = arg8;
+
+                                    _rt::Vec::from_raw_parts(arg7.cast(), len9, len9)
+                                };
+                                Some(e)
+                            }
+                            _ => _rt::invalid_enum_discriminant(),
+                        },
+                    );
+                    let ptr11 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    match result10 {
                         Ok(e) => {
-                            *ptr10.add(0).cast::<u8>() = (0i32) as u8;
+                            *ptr11.add(0).cast::<u8>() = (0i32) as u8;
                             let Response {
-                                status_code: status_code11,
-                                headers: headers11,
-                                body: body11,
+                                status_code: status_code12,
+                                headers: headers12,
+                                body: body12,
                             } = e;
-                            *ptr10.add(4).cast::<u16>() = (_rt::as_i32(status_code11)) as u16;
-                            let vec12 = (headers11.into_bytes()).into_boxed_slice();
-                            let ptr12 = vec12.as_ptr().cast::<u8>();
-                            let len12 = vec12.len();
-                            ::core::mem::forget(vec12);
-                            *ptr10.add(12).cast::<usize>() = len12;
-                            *ptr10.add(8).cast::<*mut u8>() = ptr12.cast_mut();
-                            let vec13 = (body11.into_bytes()).into_boxed_slice();
+                            *ptr11.add(4).cast::<u16>() = (_rt::as_i32(status_code12)) as u16;
+                            let vec13 = (headers12.into_bytes()).into_boxed_slice();
                             let ptr13 = vec13.as_ptr().cast::<u8>();
                             let len13 = vec13.len();
                             ::core::mem::forget(vec13);
-                            *ptr10.add(20).cast::<usize>() = len13;
-                            *ptr10.add(16).cast::<*mut u8>() = ptr13.cast_mut();
+                            *ptr11.add(12).cast::<usize>() = len13;
+                            *ptr11.add(8).cast::<*mut u8>() = ptr13.cast_mut();
+                            let vec14 = (body12.into_bytes()).into_boxed_slice();
+                            let ptr14 = vec14.as_ptr().cast::<u8>();
+                            let len14 = vec14.len();
+                            ::core::mem::forget(vec14);
+                            *ptr11.add(20).cast::<usize>() = len14;
+                            *ptr11.add(16).cast::<*mut u8>() = ptr14.cast_mut();
                         }
                         Err(e) => {
-                            *ptr10.add(0).cast::<u8>() = (1i32) as u8;
-                            let Reserror { msg: msg14 } = e;
-                            let vec15 = (msg14.into_bytes()).into_boxed_slice();
-                            let ptr15 = vec15.as_ptr().cast::<u8>();
-                            let len15 = vec15.len();
-                            ::core::mem::forget(vec15);
-                            *ptr10.add(8).cast::<usize>() = len15;
-                            *ptr10.add(4).cast::<*mut u8>() = ptr15.cast_mut();
+                            *ptr11.add(0).cast::<u8>() = (1i32) as u8;
+                            let Reserror { msg: msg15 } = e;
+                            let vec16 = (msg15.into_bytes()).into_boxed_slice();
+                            let ptr16 = vec16.as_ptr().cast::<u8>();
+                            let len16 = vec16.len();
+                            ::core::mem::forget(vec16);
+                            *ptr11.add(8).cast::<usize>() = len16;
+                            *ptr11.add(4).cast::<*mut u8>() = ptr16.cast_mut();
                         }
                     };
-                    ptr10
+                    ptr11
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
@@ -159,6 +177,7 @@ pub mod exports {
                         method: _rt::String,
                         headers: _rt::Vec<RequestHeader>,
                         url: _rt::String,
+                        body: Option<_rt::Vec<u8>>,
                     ) -> Result<Response, Reserror>;
                 }
                 #[doc(hidden)]
@@ -167,8 +186,8 @@ pub mod exports {
         ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
 
           #[export_name = "dipankardas011:httpclient/outgoing-http@0.1.0#get-request"]
-          unsafe extern "C" fn export_get_request(arg0: *mut u8,arg1: usize,arg2: *mut u8,arg3: usize,arg4: *mut u8,arg5: usize,) -> *mut u8 {
-            $($path_to_types)*::_export_get_request_cabi::<$ty>(arg0, arg1, arg2, arg3, arg4, arg5)
+          unsafe extern "C" fn export_get_request(arg0: *mut u8,arg1: usize,arg2: *mut u8,arg3: usize,arg4: *mut u8,arg5: usize,arg6: i32,arg7: *mut u8,arg8: usize,) -> *mut u8 {
+            $($path_to_types)*::_export_get_request_cabi::<$ty>(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
           }
           #[export_name = "cabi_post_dipankardas011:httpclient/outgoing-http@0.1.0#get-request"]
           unsafe extern "C" fn _post_return_get_request(arg0: *mut u8,) {
@@ -206,6 +225,13 @@ mod _rt {
         }
         let layout = alloc::Layout::from_size_align_unchecked(size, align);
         alloc::dealloc(ptr as *mut u8, layout);
+    }
+    pub unsafe fn invalid_enum_discriminant<T>() -> T {
+        if cfg!(debug_assertions) {
+            panic!("invalid enum discriminant")
+        } else {
+            core::hint::unreachable_unchecked()
+        }
     }
 
     pub fn as_i32<T: AsI32>(t: T) -> i32 {
@@ -312,15 +338,16 @@ pub(crate) use __export_http_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.25.0:http:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 377] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xfe\x01\x01A\x02\x01\
-A\x02\x01B\x0a\x01r\x03\x0bstatus-code{\x07headerss\x04bodys\x04\0\x08response\x03\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 389] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x8a\x02\x01A\x02\x01\
+A\x02\x01B\x0c\x01r\x03\x0bstatus-code{\x07headerss\x04bodys\x04\0\x08response\x03\
 \0\0\x01r\x02\x03keys\x05values\x04\0\x0erequest-header\x03\0\x02\x01r\x01\x03ms\
-gs\x04\0\x08reserror\x03\0\x04\x01p\x03\x01j\x01\x01\x01\x05\x01@\x03\x06methods\
-\x07headers\x06\x03urls\0\x07\x04\0\x0bget-request\x01\x08\x04\x01-dipankardas01\
-1:httpclient/outgoing-http@0.1.0\x05\0\x04\x01$dipankardas011:httpclient/http@0.\
-1.0\x04\0\x0b\x0a\x01\0\x04http\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0d\
-wit-component\x070.208.1\x10wit-bindgen-rust\x060.25.0";
+gs\x04\0\x08reserror\x03\0\x04\x01p\x03\x01p}\x01k\x07\x01j\x01\x01\x01\x05\x01@\
+\x04\x06methods\x07headers\x06\x03urls\x04body\x08\0\x09\x04\0\x0bget-request\x01\
+\x0a\x04\x01-dipankardas011:httpclient/outgoing-http@0.1.0\x05\0\x04\x01$dipanka\
+rdas011:httpclient/http@0.1.0\x04\0\x0b\x0a\x01\0\x04http\x03\0\0\0G\x09producer\
+s\x01\x0cprocessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x060.2\
+5.0";
 
 #[inline(never)]
 #[doc(hidden)]
