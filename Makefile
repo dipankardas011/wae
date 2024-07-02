@@ -97,7 +97,7 @@ run_get_latest_release:
 
 .PHONY: run_openai
 run_openai:
-	wasmtime run -S http composed.wasm -n dipankar --op openai
+	wasmtime run -S http --env OPENAI_API_KEY="ABCD1234" composed.wasm -n dipankar --op openai
 
 .PHONY: clean
 clean:
