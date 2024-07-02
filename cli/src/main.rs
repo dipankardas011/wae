@@ -26,7 +26,7 @@ const OP_PROJ_LATEST_RELEASE: &str = "proj_latest_release";
 
 use bindings::dipankardas011::{
     crypto::password::generate_random,
-    githubapiv2::releases::fetch_latest as fetch_latest_v2,
+    githubapi::releases::fetch_latest,
 };
 
 
@@ -48,7 +48,6 @@ async fn main() -> Result<()> {
         println!(" > Enter Length of Password");
         let mut input = String::new();
         std::io::stdin().read_line(&mut input).expect("Failed to read line");
-        std::io::stdin().read_line(&mut input).expect("Failed to read line");
         let length_pass: u32 = input.trim().parse().expect("Invalid Input");
 
         let gen_pass = generate_random(length_pass);
@@ -66,7 +65,7 @@ async fn main() -> Result<()> {
         std::io::stdin().read_line(&mut input_proj).expect("Failed to read line");
         let proj: String = input_proj.trim().parse().expect("invalid organization");
 
-        let ver = fetch_latest_v2(&org, &proj);
+        let ver = fetch_latest(&org, &proj);
         println!("Latest version: {ver}");
 
     } else {

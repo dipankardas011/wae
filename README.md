@@ -8,72 +8,16 @@ Why ti create this becuase this is the main selling point of the wasi to be able
 - rust cli
 - watttime api
 
-## Goal 1
 
-- [x] Achieved?
+## Dependency graph
 
-Create a CLI in Rust which can take users input and make it runable
-> Hint: use clappy
+```mermaid
+graph TD;
+    cli-->crypto;
+    cli-->githubapi;
+    githubapi-->httpclient;
+    httpclient-->wasi:http;
+```
 
-THings it should be able to perform
-- User input
-- command line input
-- Environment variable get
-- write a location
-
-## Goal 2
-
-- [x] Achieved?
-
-- Password generator (Python)
-
-## Goal 3
-
-- [x] Achieved?
-
-Integrate the above two goals [1](#goal-1) [2](#goal-2)
-
-## Goal 4
-
-- [x] Achieved?
-
-- HTTP working
-1. use `wasi:http` to create a component
-
-
-## Goal 5
-
-- [x] Achieved?
-
-Github Api based wit and implementation which we can use in the cli to perform some operations
-
-1. Expectation get the latest release
-- org:repo and the other thing
-- using the [4](#goal-4)
-2. Openai api usage (**TODO**)
-
-## Goal 6
-
-- [ ] Achieved?
-
-Integrate the above two goals [3](#goal-3) [4](#goal-4) [5](#goal-5)
-
-
-## Goal 7
-
-- [ ] Achieved?
-
-- Use wattime api
-- IMage generation using the openai things here [Repo Link](https://gitlab.com/dipankardas011/llm-usage/)
-
-https://docs.watttime.org/
-
-## Goal 8
-
-- [ ] Achieved?
-
-- create a vault client for intereacting with it
-
-
-> [!IMPORTANT]
-> Finally deploy using these in a docker container and runtimeclass in K8s
+`httpclient` uses `waki` crate for the http client
+`wasihttpclient` uses the `wasi:http` crate for the http client which is actually used by `waki`

@@ -41,7 +41,7 @@ pub mod dipankardas011 {
         }
     }
     #[allow(dead_code)]
-    pub mod githubapiv2 {
+    pub mod githubapi {
         #[allow(dead_code, clippy::all)]
         pub mod releases {
             #[used]
@@ -64,7 +64,7 @@ pub mod dipankardas011 {
                     let len1 = vec1.len();
                     let ptr2 = ret_area.0.as_mut_ptr().cast::<u8>();
                     #[cfg(target_arch = "wasm32")]
-                    #[link(wasm_import_module = "dipankardas011:githubapiv2/releases@0.1.0")]
+                    #[link(wasm_import_module = "dipankardas011:githubapi/releases@0.1.0")]
                     extern "C" {
                         #[link_name = "fetch-latest"]
                         fn wit_import(_: *mut u8, _: usize, _: *mut u8, _: usize, _: *mut u8);
@@ -171,11 +171,11 @@ mod _rt {
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.25.0:app:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 314] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xc0\x01\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 312] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xbe\x01\x01A\x02\x01\
 A\x04\x01B\x02\x01@\x01\x06lengthy\0s\x04\0\x0fgenerate-random\x01\0\x03\x01$dip\
 ankardas011:crypto/password@0.1.0\x05\0\x01B\x02\x01@\x02\x03orgs\x04projs\0s\x04\
-\0\x0cfetch-latest\x01\0\x03\x01)dipankardas011:githubapiv2/releases@0.1.0\x05\x01\
+\0\x0cfetch-latest\x01\0\x03\x01'dipankardas011:githubapi/releases@0.1.0\x05\x01\
 \x04\x01\x16dipankardas011:cli/app\x04\0\x0b\x09\x01\0\x03app\x03\0\0\0G\x09prod\
 ucers\x01\x0cprocessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x06\
 0.25.0";
