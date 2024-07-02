@@ -1,0 +1,10 @@
+package dipankardas011:openai@0.1.0;
+
+interface llm {
+    text-to-text: func(prompt: string) -> string;
+}
+
+world genai {
+    export llm;
+    import dipankardas011:httpclient/outgoing-http@0.1.0;
+}
