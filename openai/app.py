@@ -4,11 +4,13 @@ from genai.imports import outgoing_http
 import json
 import traceback
 import os
+from dotenv import load_dotenv
 
 
 class Llm(exports.Llm):
     @override
     def text_to_text(self, prompt: str) -> str:
+        load_dotenv()
         print(f"Prompt from user: {prompt}")
         token = os.getenv("OPENAI_API_KEY")
         if token is None:

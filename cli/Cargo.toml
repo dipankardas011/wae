@@ -10,6 +10,7 @@ clap = { version = "4.5.7", features = ["derive"] }
 wit-bindgen-rt = { version = "0.26.0", features = ["bitflags"] }
 tokio = { version = "1.38.0", features = ["sync","macros","io-util","rt","time"] }
 anyhow = "1.0.86"
+dotenv = "0.15.0"
 
 [profile.release]
 codegen-units = 1

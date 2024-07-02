@@ -6,7 +6,18 @@ use clap::Parser;
 use std::fs;
 use std::time::{Duration, SystemTime};
 use std::thread::sleep;
+use bindings::dipankardas011::{
+    crypto::password::generate_random,
+    githubapi::releases,
+    openai::llm,
+};
+use anyhow::Result;
 
+const FILE_PATH: &str = "README.md";
+const OP_CRYPTO: &str = "crypto";
+const OP_GITHUBAPI: &str = "githubapi";
+const OP_OPENAI: &str = "openai";
+const OP_DEMO: &str = "demo";
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -17,23 +28,6 @@ struct CommandToPerform {
     #[arg(short='o', long="op", value_parser=[OP_CRYPTO, OP_GITHUBAPI, OP_DEMO, OP_OPENAI], default_value_t=OP_DEMO.to_string())]
     operation: String,
 }
-
-
-const FILE_PATH: &str = "README.md";
-const OP_CRYPTO: &str = "crypto";
-const OP_GITHUBAPI: &str = "githubapi";
-const OP_OPENAI: &str = "openai";
-const OP_DEMO: &str = "demo";
-
-
-use bindings::dipankardas011::{
-    crypto::password::generate_random,
-    githubapi::releases,
-    openai::llm,
-};
-
-
-use anyhow::Result;
 
 async fn hh() {
     println!("@@ Welcome to CLI wonderland @@");
