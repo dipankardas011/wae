@@ -1,5 +1,5 @@
 from typing import override
-from crypto_guest.crypto import exports
+from crypto import exports
 import string
 import random
 

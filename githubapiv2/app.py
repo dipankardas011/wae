@@ -1,7 +1,6 @@
 from typing import override
-from githubapiv2_guest.project.types import Ok
-from githubapiv2_guest.project import exports
-from githubapiv2_guest.project.imports import outgoing_http
+from project import exports
+from project.imports import outgoing_http
 import json
 import traceback
 
@@ -16,12 +15,9 @@ class Releases(exports.Releases):
                     key="Content-Type", value="application/json",
                 ),
             ], url)
-            if isinstance(http_res, Ok):
-                print(f"Status_code: {http_res.value.status_code}")
-                data = json.loads(http_res.value.body)
-                return data["tag_name"]
-            else:
-                return http_res.value.msg
+            print(f"Status_code: {http_res.status_code}")
+            data = json.loads(http_res.body)
+            return data["tag_name"]
         except Exception as e:
             print(f"Caught Exception: {e}")
             traceback.print_exc()

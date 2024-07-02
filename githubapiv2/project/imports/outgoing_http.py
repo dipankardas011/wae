@@ -23,7 +23,7 @@ class Reserror:
     msg: str
 
 
-def get_request(method: str, headers: List[RequestHeader], url: str) -> Result[Response, Reserror]:
+def get_request(method: str, headers: List[RequestHeader], url: str) -> Response:
     """
     Raises: `project.types.Err(project.imports.outgoing_http.Reserror)`
     """
