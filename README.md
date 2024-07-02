@@ -13,9 +13,9 @@ Why ti create this becuase this is the main selling point of the wasi to be able
 
 ```mermaid
 graph TD;
-    cli-->crypto;
-    cli-->githubapi;
-    githubapi-->httpclient;
+    cli(["`CLI Written **Rust**`"])-->crypto(["`Crypto Written **Python**`"]);
+    cli-->githubapi(["`Githubapi Written **Python**`"]);
+    githubapi-->httpclient(["`HTTPClient Written **Rust**`"]);
     httpclient-->wasi:http;
 ```
 
