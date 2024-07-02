@@ -22,3 +22,15 @@ class Releases(exports.Releases):
             print(f"Caught Exception: {e}")
             traceback.print_exc()
             return "Failed to get the response"
+
+    # GET /repos/{owner}/{repo}/pulls
+    # GET /repos/{owner}/{repo}/issues
+    # GET /repos/{owner}/{repo}/contributors
+    # GET /repos/{owner}/{repo}/stargazers
+    # GET /orgs/{org}/repos
+    # POST /user/repos
+    # POST /repos/{owner}/{repo}/issues
+
+    # some of the interesting json printing pprint
+    # need to check if the env var is set for the github api call to work when its needed
+    # coloring the logs colorama

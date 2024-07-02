@@ -33,7 +33,7 @@ impl Guest for Component {
 }
 
 fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String) -> Result<CustomResponse, anyhow::Error> {
-    println!("< UserRequest\n<< Method: {method}\n<< Url: {url}\n<< Headers: {usr_headers:?}\n<");
+    println!("< UserRequest\n<< Method: {method}\n<< Url: {url}\n<\n");
 
     let mut headers: Vec<(HeaderName, HeaderValue)> = vec![
         // (HeaderName::from_bytes("Content-Name".as_bytes())?,  HeaderValue::from_str("application/json")?),
