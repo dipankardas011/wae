@@ -31,11 +31,19 @@ class Llm(exports.Llm):
             style = None
             size = ""
             if model == "dall-e-3":
-                size = input(colored("==> Enter the resolution for image [1] 1024x1024 [2] 1024x1792 [3] 1792x1024 [default=1024x1024]: ", "cyan")) or "1024x1024"
-                hd = input(colored("==> Enter the resolution for image [1] standard [2] hd  [default=standard]: ", "cyan")) or "standard"
-                style = input(colored("==> Enter the style for image [1] natural [2] vivid [default=vivid]: ", "cyan")) or "vivid"
+                c_size = input(colored("==> Enter the resolution for image [1] 1024x1024 [2] 1024x1792 [3] 1792x1024 [default=1024x1024]: ", "cyan")) or "1"
+                size = "1024x1024" if c_size == "1" else "1024x1792" if c_size == "2" else "1792x1024"
+
+                c_hd = input(colored("==> Enter the resolution for image [1] standard [2] hd  [default=standard]: ", "cyan")) or "1"
+                hd = "standard" if c_hd == "1" else "hd"
+
+                style = input(colored("==> Enter the style for image [1] natural [2] vivid [default=vivid]: ", "cyan")) or "2"
+                style = "natural" if style == "1" else "vivid"
+
             else:
-                size = input(colored("==> Enter the resolution for image [1] 256x256 [2] 512x512 [3] 1024x1024 [default=256x256]: ", "cyan")) or "256x256"
+                c_size = input(colored("==> Enter the resolution for image [1] 256x256 [2] 512x512 [3] 1024x1024 [default=256x256]: ", "cyan")) or "1"
+                size = "256x256" if c_size == "1" else "512x512" if c_size == "2" else "1024x1024"
+
 
             text = colored("User", "yellow", attrs=["reverse", "blink"])
             print(f"\n{text}\n{colored(choice, "black")}\n")
