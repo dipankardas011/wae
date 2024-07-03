@@ -75,16 +75,20 @@ class Llm(exports.Llm):
             text = colored("Assistant", "yellow", attrs=["reverse", "blink"])
             print(f"{text}\nUrl: {colored(resp, "black")}\n\n")
 
-            http_res = outgoing_http.get_request(
-                method="GET",
-                headers=[],
-                url=resp,
-                body=None,
-            )
-            if http_res.status_code != 200:
-                raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
-            with open("image.jpg", "wb") as f:
-                f.write(http_res.body)
+            save = input(colored("==> Do you want to download the image? [y/N]: ", "cyan"))
+            if save.lower() in ["y", "yes", "Y"]:
+
+                file_name = input(colored("==> Enter the file name[image.png]: ", "cyan")) or "image.png"
+                http_res = outgoing_http.get_request(
+                    method="GET",
+                    headers=[],
+                    url=resp,
+                    body=None,
+                )
+                if http_res.status_code != 200:
+                    raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
+                with open(file_name, "wb") as f:
+                    f.write(http_res.body)
 
         except Exception as e:
             text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
