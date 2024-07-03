@@ -5,6 +5,7 @@ import json
 import traceback
 import os
 from dotenv import load_dotenv
+from termcolor import colored, cprint
 
 
 class Llm(exports.Llm):
@@ -15,14 +16,16 @@ class Llm(exports.Llm):
     @override
     def text_to_text(self) -> None:
         load_dotenv()
-        token = os.getenv("OPENAI_API_KEY")
-        if token is None:
-            raise Exception("env:$OPENAI_API_KEY is not set")
 
         try:
+            token = os.getenv("OPENAI_API_KEY")
+            if token is None:
+                raise Exception("env:$OPENAI_API_KEY is not set")
+
             default_model = "gpt-3.5-turbo"
             valid_models = ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4", "gpt-4o"]
-            model = input(f"==> Enter the model name [gpt-3.5-turbo]: ") or default_model
+
+            model = input(f"{colored("===> Enter the model name", "cyan")} [{colored("gpt-3.5-turbo", "blue")}]: ") or default_model
             if model not in valid_models:
                 raise Exception(f"Invalid model name, Valid model names are: {valid_models}")
 
@@ -32,15 +35,18 @@ class Llm(exports.Llm):
                     {"role": "system", "content": "You are a helpful assistant."}
                 ]
             }
-            sys_prompt = input("==> Enter your system prompt: ")
+            sys_prompt = input(colored("==> Enter your system prompt: ", "cyan"))
             if len(sys_prompt) != 0:
                 msg["messages"][0]["content"] = sys_prompt
 
-            print(">>> For Stoping you can type 'exit' or 'quit' or 'stop' or 'end' or 'bye'")
+            print(f"{colored('>>> For Stoping you can type \'exit\' or \'quit\' or \'stop\' or \'end\' or \'bye\'', "light_yellow")}")
             while True:
-                choice = input("==> Enter the prompt: ")
+                choice = input(colored("==> Enter the prompt: ", "cyan"))
                 if choice in ["exit", "quit", "stop", "end", "bye"]:
                     break
+
+                text = colored("User", "yellow", attrs=["reverse", "blink"])
+                print(f"\n{text}\n{colored(choice, "black")}\n")
 
                 msg["messages"].append({"role": "user", "content": choice})
 
@@ -65,15 +71,23 @@ class Llm(exports.Llm):
 
                 data = json.loads(http_res.body)
                 resp = data['choices'][0]['message']['content']
-                print(f"Response from AI [STOPPED:<{data['choices'][0]['finish_reason']}>]\n{resp}\n====\n")
+                text = colored("Assistant", "yellow", attrs=["reverse", "blink"])
+                print(f"{text}\n{colored(resp, "light_green")}\n\n")
+
+                if data['choices'][0]['finish_reason'] != "stop":
+                    cprint(f"AI stopped because of: {data['choices'][0]['finish_reason']}", "yellow", attrs=["reverse", "blink"])
+
                 msg["messages"].append({"role": "assistant", "content": resp})
 
-            save = input("==> Do you want to save the conversation? [y/N]: ")
+            save = input(colored("==> Do you want to save the conversation? [y/N]: ", "cyan"))
             if save.lower() in ["y", "yes", "Y"]:
-                file_name = input("Enter the file name: ")
+
+                file_name = input(colored("==> Enter the file name[conversation.json]: ", "cyan")) or "conversation.json"
                 with open(file_name, "w") as f:
                     f.write(f"{json.dumps(msg).encode('utf-8')}\n")
 
         except Exception as e:
-            print(f"Caught Exception: {e}")
+            text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
+
+            print(f"{text}")
             traceback.print_exc()
