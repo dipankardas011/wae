@@ -97,7 +97,7 @@ run_get_latest_release:
 
 .PHONY: run_openai
 run_openai:
-	wasmtime run -S http --dir=. composed.wasm -n dipankar --op openai
+	wasmtime run -S http -S cli --dir=. composed.wasm -n dipankar --op openai
 
 .PHONY: clean
 clean:
