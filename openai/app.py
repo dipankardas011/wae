@@ -67,13 +67,24 @@ class Llm(exports.Llm):
             )
 
             if http_res.status_code != 200:
-                raise Exception(f"StatusCode: {http_res.status_code}, Reason: {http_res.body}")
+                raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
 
             data = json.loads(http_res.body)
 
             resp = data['data'][0]['url']
             text = colored("Assistant", "yellow", attrs=["reverse", "blink"])
             print(f"{text}\nUrl: {colored(resp, "black")}\n\n")
+
+            http_res = outgoing_http.get_request(
+                method="GET",
+                headers=[],
+                url=resp,
+                body=None,
+            )
+            if http_res.status_code != 200:
+                raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
+            with open("image.jpg", "wb") as f:
+                f.write(http_res.body)
 
         except Exception as e:
             text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
@@ -135,7 +146,7 @@ class Llm(exports.Llm):
                 )
 
                 if http_res.status_code != 200:
-                    raise Exception(f"StatusCode: {http_res.status_code}, Reason: {http_res.body}")
+                    raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
 
                 data = json.loads(http_res.body)
                 resp = data['choices'][0]['message']['content']

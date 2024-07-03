@@ -8,3 +8,6 @@
 **/*_host/
 **/*.wasm
 **/*.idea/
+**/*.jpg
+**/*.jpeg
+**/*.png

@@ -11,7 +11,7 @@ from ..types import Result, Ok, Err, Some
 class Response:
     status_code: int
     headers: str
-    body: str
+    body: bytes
 
 @dataclass
 class RequestHeader:

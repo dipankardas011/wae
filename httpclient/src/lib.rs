@@ -84,8 +84,8 @@ fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String, raw
         Ok(v) => {
             let status_code = v.status_code();
             let headers = v.headers().to_owned();
-            let body = String::from_utf8(v.body().unwrap()).expect("Failed to convert to the string");
-            Ok(CustomResponse { status_code, headers: format!("{headers:?}"), body })
+            // let body = String::from_utf8(v.body().unwrap()).expect("Failed to convert to the string");
+            Ok(CustomResponse { status_code, headers: format!("{headers:?}"), body: v.body().unwrap() })
         }
         Err(e) => Err(anyhow!("Error(HTTP OUTGOING CLIENT) {e:?}"))
     }
@@ -94,7 +94,7 @@ fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String, raw
 struct CustomResponse {
     status_code: u16,
     headers: String,
-    body: String,
+    body: Vec<u8>,
 }
 
 bindings::export!(Component with_types_in bindings);
