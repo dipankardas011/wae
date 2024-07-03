@@ -64,6 +64,12 @@ class Llm(exports.Llm):
                 print(f"Response from AI [STOPPED:<{data['choices'][0]['finish_reason']}>]: {resp}")
                 msg["messages"].append({"role": "assistant", "content": resp})
 
+            save = input("Do you want to save the conversation? [y/N]: ")
+            if save.lower() in ["y", "yes", "Y"]:
+                file_name = input("Enter the file name: ")
+                with open(file_name, "w") as f:
+                    f.write(f"{json.dumps(msg).encode('utf-8')}\n")
+
         except Exception as e:
             print(f"Caught Exception: {e}")
             traceback.print_exc()
