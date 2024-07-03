@@ -58,7 +58,7 @@ async fn main() -> Result<()> {
             if choice == 1 {
                 llm::text_to_text();
             } else if choice == 2 {
-                llm::text_to_image("");
+                llm::text_to_image();
             }
         }
         OP_CRYPTO => {

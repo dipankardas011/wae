@@ -14,10 +14,7 @@ class Llm(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    def text_to_image(self, prompt: str) -> str:
-        """
-        *String returned is a the location where to look for the image*/
-        """
+    def text_to_image(self) -> None:
         raise NotImplementedError
 
 

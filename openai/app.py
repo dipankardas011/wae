@@ -10,8 +10,76 @@ from termcolor import colored, cprint
 
 class Llm(exports.Llm):
     @override
-    def text_to_image(self, prompt: str) -> str:
-        ...
+    def text_to_image(self) -> None:
+        load_dotenv()
+
+        try:
+            token = os.getenv("OPENAI_API_KEY")
+            if token is None:
+                raise Exception("env:$OPENAI_API_KEY is not set")
+
+            default_model = "dall-e-2"
+            valid_models = ["dall-e-3", "dall-e-2"]
+
+            model = input(f"{colored("===> Enter the model name", "cyan")} [{colored(default_model, "blue")}]: ") or default_model
+            if model not in valid_models:
+                raise Exception(f"Invalid model name, Valid model names are: {valid_models}")
+
+            choice = input(colored("==> Enter the prompt: ", "cyan"))
+
+            hd = None
+            style = None
+            size = ""
+            if model == "dall-e-3":
+                size = input(colored("==> Enter the resolution for image [1] 1024x1024 [2] 1024x1792 [3] 1792x1024 [default=1024x1024]: ", "cyan")) or "1024x1024"
+                hd = input(colored("==> Enter the resolution for image [1] standard [2] hd  [default=standard]: ", "cyan")) or "standard"
+                style = input(colored("==> Enter the style for image [1] natural [2] vivid [default=vivid]: ", "cyan")) or "vivid"
+            else:
+                size = input(colored("==> Enter the resolution for image [1] 256x256 [2] 512x512 [3] 1024x1024 [default=256x256]: ", "cyan")) or "256x256"
+
+            text = colored("User", "yellow", attrs=["reverse", "blink"])
+            print(f"\n{text}\n{colored(choice, "black")}\n")
+
+            msg = {
+                "model": model,
+                "prompt": choice,
+                "n": 1,
+                "size": size,
+            }
+            if model == "dall-e-3":
+                msg["quality"] = hd
+                msg["style"] = style
+
+            str_msg = json.dumps(msg)
+
+            http_res = outgoing_http.get_request(
+                method="POST",
+                headers=[
+                    outgoing_http.RequestHeader(
+                        key="Content-Type", value="application/json",
+                    ),
+                    outgoing_http.RequestHeader(
+                        key="Authorization", value=f"Bearer {token}",
+                    ),
+                ],
+                url="https://api.openai.com/v1/images/generations",
+                body=str_msg.encode('utf-8'),
+            )
+
+            if http_res.status_code != 200:
+                raise Exception(f"StatusCode: {http_res.status_code}, Reason: {http_res.body}")
+
+            data = json.loads(http_res.body)
+
+            resp = data['data'][0]['url']
+            text = colored("Assistant", "yellow", attrs=["reverse", "blink"])
+            print(f"{text}\nUrl: {colored(resp, "black")}\n\n")
+
+        except Exception as e:
+            text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
+
+            print(f"{text}")
+            traceback.print_exc()
 
     @override
     def text_to_text(self) -> None:
@@ -25,7 +93,7 @@ class Llm(exports.Llm):
             default_model = "gpt-3.5-turbo"
             valid_models = ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4", "gpt-4o"]
 
-            model = input(f"{colored("===> Enter the model name", "cyan")} [{colored("gpt-3.5-turbo", "blue")}]: ") or default_model
+            model = input(f"{colored("===> Enter the model name", "cyan")} [{colored(default_model, "blue")}]: ") or default_model
             if model not in valid_models:
                 raise Exception(f"Invalid model name, Valid model names are: {valid_models}")
 
