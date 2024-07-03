@@ -152,7 +152,25 @@ pub mod dipankardas011 {
                 super::super::super::__link_custom_section_describing_imports;
             use super::super::super::_rt;
             #[allow(unused_unsafe, clippy::all)]
-            pub fn text_to_text(prompt: &str) -> _rt::String {
+            pub fn text_to_text() {
+                unsafe {
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(wasm_import_module = "dipankardas011:openai/llm@0.1.0")]
+                    extern "C" {
+                        #[link_name = "text-to-text"]
+                        fn wit_import();
+                    }
+
+                    #[cfg(not(target_arch = "wasm32"))]
+                    fn wit_import() {
+                        unreachable!()
+                    }
+                    wit_import();
+                }
+            }
+            #[allow(unused_unsafe, clippy::all)]
+            /// *String returned is a the location where to look for the image*/
+            pub fn text_to_image(prompt: &str) -> _rt::String {
                 unsafe {
                     #[repr(align(4))]
                     struct RetArea([::core::mem::MaybeUninit<u8>; 8]);
@@ -164,7 +182,7 @@ pub mod dipankardas011 {
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "dipankardas011:openai/llm@0.1.0")]
                     extern "C" {
-                        #[link_name = "text-to-text"]
+                        #[link_name = "text-to-image"]
                         fn wit_import(_: *mut u8, _: usize, _: *mut u8);
                     }
 
@@ -269,16 +287,17 @@ mod _rt {
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.25.0:app:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 438] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xbc\x02\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 461] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xd3\x02\x01A\x02\x01\
 A\x06\x01B\x02\x01@\x01\x06lengthy\0s\x04\0\x0fgenerate-random\x01\0\x03\x01$dip\
 ankardas011:crypto/password@0.1.0\x05\0\x01B\x05\x01@\x02\x03orgs\x04projs\0s\x04\
 \0\x12get-latest-release\x01\0\x04\0\x10get-contributors\x01\0\x01@\x02\x03orgs\x04\
 projs\0{\x04\0\x09get-stars\x01\x01\x03\x01'dipankardas011:githubapi/releases@0.\
-1.0\x05\x01\x01B\x02\x01@\x01\x06prompts\0s\x04\0\x0ctext-to-text\x01\0\x03\x01\x1f\
-dipankardas011:openai/llm@0.1.0\x05\x02\x04\x01\x16dipankardas011:cli/app\x04\0\x0b\
-\x09\x01\0\x03app\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-compone\
-nt\x070.208.1\x10wit-bindgen-rust\x060.25.0";
+1.0\x05\x01\x01B\x04\x01@\0\x01\0\x04\0\x0ctext-to-text\x01\0\x01@\x01\x06prompt\
+s\0s\x04\0\x0dtext-to-image\x01\x01\x03\x01\x1fdipankardas011:openai/llm@0.1.0\x05\
+\x02\x04\x01\x16dipankardas011:cli/app\x04\0\x0b\x09\x01\0\x03app\x03\0\0\0G\x09\
+producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rus\
+t\x060.25.0";
 
 #[inline(never)]
 #[doc(hidden)]

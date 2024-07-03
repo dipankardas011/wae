@@ -43,13 +43,18 @@ async fn main() -> Result<()> {
 
     match args.operation.as_str() {
         OP_OPENAI => {
-            println!(" > Enter your Prompt");
-            let mut input_org = String::new();
-            std::io::stdin().read_line(&mut input_org).expect("Failed to read line");
-            let prompt: String = input_org.trim().parse().expect("invalid prompt");
-            let generated_output = llm::text_to_text(&prompt);
-            println!("Output\n{generated_output}")
-            
+            println!("> Enter [1] text-to-text [2] text-to-image");
+            let mut input = String::new();
+            std::io::stdin().read_line(&mut input).expect("Failed to read line");
+            let choice: i32 = input.trim().parse().expect("Invalid Input");
+            if choice < 1 || choice > 2 {
+                eprintln!("Invalid choice");
+            }
+            if choice == 1 {
+                llm::text_to_text();
+            } else if choice == 2 {
+                llm::text_to_image("");
+            }
         }
         OP_CRYPTO => {
             println!(" > Enter Length of Password");

@@ -10,7 +10,14 @@ from ..types import Result, Ok, Err, Some
 class Llm(Protocol):
 
     @abstractmethod
-    def text_to_text(self, prompt: str) -> str:
+    def text_to_text(self) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def text_to_image(self, prompt: str) -> str:
+        """
+        *String returned is a the location where to look for the image*/
+        """
         raise NotImplementedError
 
 

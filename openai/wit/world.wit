@@ -1,7 +1,9 @@
 package dipankardas011:openai@0.1.0;
 
 interface llm {
-    text-to-text: func(prompt: string) -> string;
+    text-to-text: func();
+    /*String returned is a the location where to look for the image*/
+    text-to-image: func(prompt: string) -> string;
 }
 
 world genai {
