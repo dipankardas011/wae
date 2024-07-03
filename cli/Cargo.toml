@@ -10,6 +10,7 @@ clap = { version = "4.5.7", features = ["derive"] }
 wit-bindgen-rt = { version = "0.26.0", features = ["bitflags"] }
 tokio = { version = "1.38.0", features = ["sync","macros","io-util","rt","time"] }
 anyhow = "1.0.86"
+ansi_term = "0.12"
 
 [profile.release]
 codegen-units = 1
@@ -28,5 +29,6 @@ path = "wit"
 "dipankardas011:crypto" = { path = "../crypto/wit" }
 "dipankardas011:githubapi" = { path = "../githubapi/wit" }
 "dipankardas011:httpclient" = { path = "../httpclient/wit" }
+"dipankardas011:openai" = { path = "../openai/wit" }
 
 [package.metadata.component.dependencies]

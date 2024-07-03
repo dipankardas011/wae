@@ -25,7 +25,7 @@ class Reserror:
 
 def get_request(method: str, headers: List[RequestHeader], url: str, body: Optional[bytes]) -> Response:
     """
-    Raises: `project.types.Err(project.imports.outgoing_http.Reserror)`
+    Raises: `genai.types.Err(genai.imports.outgoing_http.Reserror)`
     """
     raise NotImplementedError
 

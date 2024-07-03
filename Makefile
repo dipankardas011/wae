@@ -15,6 +15,13 @@ gen-componentize-py-githubapi:
 		rm -rf project && \
 		componentize-py --wit-path wit --world project bindings .
 
+.PHONY: gen-componentize-py-openai
+gen-componentize-py-openai:
+	cd openai && \
+		wit-deps && \
+		rm -rf genai && \
+		componentize-py --wit-path wit --world genai bindings .
+
 .PHONY: build_cli
 build_cli:
 	cd cli && \
@@ -23,6 +30,7 @@ build_cli:
 	wac plug cli/target/wasm32-wasi/release/cli.wasm \
 		--plug crypto/crypto.wasm \
 		--plug githubapi-composed.wasm \
+		--plug openai-composed.wasm \
 		-o composed.wasm
 	@echo -e "${green}PASS${clear} wac plug for cli/"
 
@@ -50,6 +58,20 @@ build_github_api:
 		-o githubapi-composed.wasm
 	@echo -e "${green}PASS${clear} wac plug for githubapi/"
 
+.PHONY: build_openai
+build_openai:
+	cd openai && \
+		componentize-py \
+			-d wit \
+			-w genai \
+			componentize app \
+			-o openai.wasm
+	@echo -e "${green}PASS${clear} Build for openai/"
+	wac plug openai/openai.wasm \
+		--plug httpclient/target/wasm32-wasi/release/httpclient.wasm \
+		-o openai-composed.wasm
+	@echo -e "${green}PASS${clear} wac plug for openai/"
+
 .PHONY: build_httpclient
 build_httpclient:
 	cd httpclient && \
@@ -57,7 +79,7 @@ build_httpclient:
 	@echo -e "${green}PASS${clear} Build for httpclient/"
 
 .PHONY: build
-build: build_httpclient build_crypto build_github_api build_cli
+build: build_httpclient build_crypto build_openai build_github_api build_cli
 	@echo -e "${green}DONE${clear} Build all the components"
 	@echo -e "next run the following commands make run_* to run the components"
 
@@ -73,14 +95,20 @@ run_demo:
 run_get_latest_release:
 	wasmtime run -S http composed.wasm -n dipankar --op githubapi
 
+.PHONY: run_openai
+run_openai:
+	wasmtime run -S http -S cli --dir=. composed.wasm -n dipankar --op openai
+
 .PHONY: clean
 clean:
 	rm -vrf \
 		cli/target \
 		crypto/crypto.wasm \
 		githubapi/githubapi.wasm \
+		openai/openai.wasm \
 		httpclient/target \
 		wasihttpclient/target \
 		composed.wasm \
-		githubapi-composed.wasm
+		githubapi-composed.wasm \
+		openai-composed.wasm
 	@echo -e "${green}DONE${clear} removed all the compiled files"

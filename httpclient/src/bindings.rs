@@ -18,7 +18,7 @@ pub mod exports {
                 pub struct Response {
                     pub status_code: u16,
                     pub headers: _rt::String,
-                    pub body: _rt::String,
+                    pub body: _rt::Vec<u8>,
                 }
                 impl ::core::fmt::Debug for Response {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
@@ -132,7 +132,7 @@ pub mod exports {
                             ::core::mem::forget(vec13);
                             *ptr11.add(12).cast::<usize>() = len13;
                             *ptr11.add(8).cast::<*mut u8>() = ptr13.cast_mut();
-                            let vec14 = (body12.into_bytes()).into_boxed_slice();
+                            let vec14 = (body12).into_boxed_slice();
                             let ptr14 = vec14.as_ptr().cast::<u8>();
                             let len14 = vec14.len();
                             ::core::mem::forget(vec14);
@@ -163,12 +163,14 @@ pub mod exports {
                             _rt::cabi_dealloc(l1, l2, 1);
                             let l3 = *arg0.add(16).cast::<*mut u8>();
                             let l4 = *arg0.add(20).cast::<usize>();
-                            _rt::cabi_dealloc(l3, l4, 1);
+                            let base5 = l3;
+                            let len5 = l4;
+                            _rt::cabi_dealloc(base5, len5 * 1, 1);
                         }
                         _ => {
-                            let l5 = *arg0.add(4).cast::<*mut u8>();
-                            let l6 = *arg0.add(8).cast::<usize>();
-                            _rt::cabi_dealloc(l5, l6, 1);
+                            let l6 = *arg0.add(4).cast::<*mut u8>();
+                            let l7 = *arg0.add(8).cast::<usize>();
+                            _rt::cabi_dealloc(l6, l7, 1);
                         }
                     }
                 }
@@ -206,12 +208,12 @@ pub mod exports {
 }
 mod _rt {
     pub use alloc_crate::string::String;
+    pub use alloc_crate::vec::Vec;
 
     #[cfg(target_arch = "wasm32")]
     pub fn run_ctors_once() {
         wit_bindgen_rt::run_ctors_once();
     }
-    pub use alloc_crate::vec::Vec;
     pub unsafe fn string_lift(bytes: Vec<u8>) -> String {
         if cfg!(debug_assertions) {
             String::from_utf8(bytes).unwrap()
@@ -340,10 +342,10 @@ pub(crate) use __export_http_impl as export;
 #[doc(hidden)]
 pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 389] = *b"\
 \0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x8a\x02\x01A\x02\x01\
-A\x02\x01B\x0c\x01r\x03\x0bstatus-code{\x07headerss\x04bodys\x04\0\x08response\x03\
-\0\0\x01r\x02\x03keys\x05values\x04\0\x0erequest-header\x03\0\x02\x01r\x01\x03ms\
-gs\x04\0\x08reserror\x03\0\x04\x01p\x03\x01p}\x01k\x07\x01j\x01\x01\x01\x05\x01@\
-\x04\x06methods\x07headers\x06\x03urls\x04body\x08\0\x09\x04\0\x0bget-request\x01\
+A\x02\x01B\x0c\x01p}\x01r\x03\x0bstatus-code{\x07headerss\x04body\0\x04\0\x08res\
+ponse\x03\0\x01\x01r\x02\x03keys\x05values\x04\0\x0erequest-header\x03\0\x03\x01\
+r\x01\x03msgs\x04\0\x08reserror\x03\0\x05\x01p\x04\x01k\0\x01j\x01\x02\x01\x06\x01\
+@\x04\x06methods\x07headers\x07\x03urls\x04body\x08\0\x09\x04\0\x0bget-request\x01\
 \x0a\x04\x01-dipankardas011:httpclient/outgoing-http@0.1.0\x05\0\x04\x01$dipanka\
 rdas011:httpclient/http@0.1.0\x04\0\x0b\x0a\x01\0\x04http\x03\0\0\0G\x09producer\
 s\x01\x0cprocessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x060.2\

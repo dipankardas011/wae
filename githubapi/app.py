@@ -65,7 +65,7 @@ class Releases(exports.Releases):
                 )
             ], url, None)
             if http_res.status_code != 200:
-                print(f"StatusCode: {http_res.status_code}, Reason: {http_res.body}")
+                print(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
                 return -999
             data = json.loads(http_res.body)
             githubId = [item['login'] for item in data]

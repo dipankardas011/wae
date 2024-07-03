@@ -4,7 +4,7 @@ interface outgoing-http {
     record response {
         status-code: u16, 
         headers: string,
-        body: string
+        body: list<u8>
     }
 
     record request-header {
