@@ -15,7 +15,9 @@ Why ti create this becuase this is the main selling point of the wasi to be able
 graph TD;
     cli(["`CLI Written **Rust**`"])-->crypto(["`Crypto Written **Python**`"]);
     cli-->githubapi(["`Githubapi Written **Python**`"]);
+    cli-->openai(["`OpenAI LLM Written **Python**`"]);
     githubapi-->httpclient(["`HTTPClient Written **Rust**`"]);
+    openai-->httpclient;
     httpclient-->wasi:http;
 ```
 

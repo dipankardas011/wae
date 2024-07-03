@@ -42,11 +42,15 @@ Github Api based wit and implementation which we can use in the cli to perform s
 1. Expectation get the latest release
 - org:repo and the other thing
 - using the [4](#goal-4)
-2. Openai api usage (**TODO**)
+2. Openai api usage
+- text to text chat with context save
+- generate image
+    - IMage generation using the openai things here [Repo Link](https://gitlab.com/dipankardas011/llm-usage/)
+- image to image (_Optional_)
 
 ## Goal 6
 
-- [ ] Achieved?
+- [x] Achieved?
 
 Integrate the above two goals [3](#goal-3) [4](#goal-4) [5](#goal-5)
 
@@ -56,7 +60,6 @@ Integrate the above two goals [3](#goal-3) [4](#goal-4) [5](#goal-5)
 - [ ] Achieved?
 
 - Use wattime api
-- IMage generation using the openai things here [Repo Link](https://gitlab.com/dipankardas011/llm-usage/)
 
 https://docs.watttime.org/
 
