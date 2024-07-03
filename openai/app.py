@@ -5,7 +5,12 @@ import json
 import traceback
 import os
 from dotenv import load_dotenv
+import logging
+import coloredlogs
 
+coloredlogs.install()
+
+logger = logging.getLogger(__name__)
 
 class Llm(exports.Llm):
     @override
@@ -17,24 +22,29 @@ class Llm(exports.Llm):
         load_dotenv()
         token = os.getenv("OPENAI_API_KEY")
         if token is None:
-            print("env:$OPENAI_API_KEY is not set")
+            logger.error("env:$OPENAI_API_KEY is not set")
             return
 
         try:
             model = "gpt-3.5-turbo"
+            valid_models = ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4", "gpt-4o"]
+            model = input(f"==> Enter the model name [gpt-3.5-turbo]: ") or model
+            if model not in valid_models:
+                raise Exception(f"Invalid model name, Valid model names are: {valid_models}")
+
             msg = {
                 "model": model,
                 "messages": [
                     {"role": "system", "content": "You are a helpful assistant."}
                 ]
             }
-            sys_prompt = input("Enter your system prompt: ")
+            sys_prompt = input("==> Enter your system prompt: ")
             if len(sys_prompt) != 0:
                 msg["messages"][0]["content"] = sys_prompt
 
-            print(">>> For Stoping you can type 'exit' or 'quit' or 'stop' or 'end' or 'bye'")
+            logger.info(">>> For Stoping you can type 'exit' or 'quit' or 'stop' or 'end' or 'bye'")
             while True:
-                choice = input("Enter the prompt: ")
+                choice = input("==> Enter the prompt: ")
                 if choice in ["exit", "quit", "stop", "end", "bye"]:
                     break
 
@@ -61,15 +71,15 @@ class Llm(exports.Llm):
 
                 data = json.loads(http_res.body)
                 resp = data['choices'][0]['message']['content']
-                print(f"Response from AI [STOPPED:<{data['choices'][0]['finish_reason']}>]: {resp}")
+                logger.info(f"Response from AI [STOPPED:<{data['choices'][0]['finish_reason']}>]\n{resp}\n====\n")
                 msg["messages"].append({"role": "assistant", "content": resp})
 
-            save = input("Do you want to save the conversation? [y/N]: ")
+            save = input("==> Do you want to save the conversation? [y/N]: ")
             if save.lower() in ["y", "yes", "Y"]:
                 file_name = input("Enter the file name: ")
                 with open(file_name, "w") as f:
                     f.write(f"{json.dumps(msg).encode('utf-8')}\n")
 
         except Exception as e:
-            print(f"Caught Exception: {e}")
+            logger.error(f"Caught Exception: {e}")
             traceback.print_exc()

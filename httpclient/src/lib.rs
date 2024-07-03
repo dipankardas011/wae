@@ -33,8 +33,6 @@ impl Guest for Component {
 }
 
 fn execute_request(method: String, usr_headers: Vec<WitHeader>, url: String, raw_body: Option<Vec<u8>>) -> Result<CustomResponse, anyhow::Error> {
-    println!("< UserRequest\n<< Method: {method}\n<< Url: {url}\n<\n");
-
     let mut headers: Vec<(HeaderName, HeaderValue)> = vec![
         (HeaderName::from_bytes("User-Agent".as_bytes())?,  HeaderValue::from_str("Curl/8.6.0")?),
     ];
