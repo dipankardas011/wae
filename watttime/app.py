@@ -33,7 +33,7 @@ class Watttime(exports.Watttime):
 
             if http_res.status_code != 200:
                 raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
-                return False
+
             data = json.loads(http_res.body)
             print(f"Registration successful {data}")
             return True
@@ -54,12 +54,26 @@ class Watttime(exports.Watttime):
             if token_pass is None:
                 raise Exception("env:$WATTTIME_PASSWORD is not set")
 
-            encoded_data = base64.b64encode(f"{token_usr}:{token_pass}".encode('utf-8'))
-            print(encoded_data.decode('utf-8'))
-            return "ABCDXYZ"
+            encoded_data = base64.b64encode(f"{token_usr}:{token_pass}".encode('utf-8')).decode('utf-8')
+
+            http_res = outgoing_http.get_request(
+                method="GET",
+                headers=[
+                    outgoing_http.RequestHeader(
+                        key="Authorization", value=f"Basic {encoded_data}",
+                    )
+                ],
+                url="https://api.watttime.org/login",
+                body=None)
+
+            if http_res.status_code != 200:
+                raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
+
+            data = json.loads(http_res.body)
+            resp = data['token']
+            return resp
 
         except Exception as e:
             text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
-
             print(f"{text}")
             traceback.print_exc()
