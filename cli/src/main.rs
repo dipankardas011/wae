@@ -10,15 +10,17 @@ use bindings::dipankardas011::{
     crypto::password::generate_random,
     githubapi::releases,
     openai::llm,
+    watttime,
 };
 use anyhow::Result;
 use ansi_term;
-use ansi_term::Colour::{Cyan,Black,Red, Green, Blue, Yellow};
+use ansi_term::Colour::{Cyan, Black, Red, Green, Blue, Yellow};
 
 const FILE_PATH: &str = "README.md";
 const OP_CRYPTO: &str = "crypto";
 const OP_GITHUBAPI: &str = "githubapi";
 const OP_OPENAI: &str = "openai";
+const OP_GREEN: &str = "green";
 const OP_DEMO: &str = "demo";
 
 #[derive(Parser, Debug)]
@@ -27,7 +29,7 @@ struct CommandToPerform {
     #[arg(short = 'n', long = "name")]
     name: String,
 
-    #[arg(short='o', long="op", value_parser=[OP_CRYPTO, OP_GITHUBAPI, OP_DEMO, OP_OPENAI], default_value_t=OP_DEMO.to_string())]
+    #[arg(short='o', long="op", value_parser=[OP_CRYPTO, OP_GITHUBAPI, OP_DEMO, OP_OPENAI, OP_GREEN], default_value_t=OP_DEMO.to_string())]
     operation: String,
 }
 
@@ -47,6 +49,39 @@ async fn main() -> Result<()> {
     hh(&args.name).await;
 
     match args.operation.as_str() {
+        OP_GREEN => {
+            println!("{}", Cyan.paint("> Enter [1] register [2] login"));
+            let mut input = String::new();
+            std::io::stdin().read_line(&mut input).expect("Failed to read line");
+            let choice: i32 = input.trim().parse().expect("Invalid Input");
+            if choice < 1 || choice > 2 {
+                eprintln!("{}", Red.bold().paint("Invalid choice"));
+            }
+            if choice == 1 {
+                println!("{}", Cyan.paint(" > Enter UserName"));
+                let mut input_username = String::new();
+                std::io::stdin().read_line(&mut input_username).expect("Failed to read line");
+                let username: String = input_username.trim().parse().expect("invalid organization");
+
+                println!("{}", Cyan.paint(" > Enter Password"));
+                let mut input_password = String::new();
+                std::io::stdin().read_line(&mut input_password).expect("Failed to read line");
+                let password: String = input_password.trim().parse().expect("invalid organization");
+
+                println!("{}", Cyan.paint(" > Enter Email"));
+                let mut input_email = String::new();
+                std::io::stdin().read_line(&mut input_email).expect("Failed to read line");
+                let email: String = input_email.trim().parse().expect("invalid organization");
+
+                watttime::watttime::register(&username, &password, &email);
+            } else if choice == 2 {
+                let token = watttime::watttime::get_token();
+                match token {
+                    Some(t) => println!("{}: {t}", Green.bold().paint("Token")),
+                    None => eprintln!("{}", Red.bold().paint("Failed to get token")),
+                }
+            }
+        }
         OP_OPENAI => {
             println!("{}", Cyan.paint("> Enter [1] text-to-text [2] text-to-image"));
             let mut input = String::new();

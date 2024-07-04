@@ -1,0 +1,11 @@
+package dipankardas011:watttime@0.1.0;
+
+interface watttime {
+    register: func(username: string, password: string, email: string) -> bool;
+    get-token: func() -> option<string>;
+}
+
+world green {
+    export watttime;
+    import dipankardas011:httpclient/outgoing-http@0.1.0;
+}

@@ -8,6 +8,14 @@ gen-componentize-py-crypto:
 	cd crypto && rm -rf crypto && \
 		componentize-py --wit-path wit/world.wit --world crypto bindings .
 
+
+.PHONY: gen-componentize-py-watttime
+gen-componentize-py-watttime:
+	cd watttime && \
+		wit-deps && \
+		rm -rf green && \
+		componentize-py --wit-path wit --world green bindings .
+
 .PHONY: gen-componentize-py-githubapi
 gen-componentize-py-githubapi:
 	cd githubapi && \
@@ -30,6 +38,7 @@ build_cli:
 	wac plug cli/target/wasm32-wasi/release/cli.wasm \
 		--plug crypto/crypto.wasm \
 		--plug githubapi-composed.wasm \
+		--plug watttime-composed.wasm \
 		--plug openai-composed.wasm \
 		-o composed.wasm
 	@echo -e "${green}PASS${clear} wac plug for cli/"
@@ -43,6 +52,20 @@ build_crypto:
 			componentize app_crypto \
 			-o crypto.wasm
 	@echo -e "${green}PASS${clear} Build for crypto/"
+
+.PHONY: build_watttime
+build_watttime:
+	cd watttime && \
+		componentize-py \
+			-d wit \
+			-w green \
+			componentize app \
+			-o watttime.wasm
+	@echo -e "${green}PASS${clear} Build for watttime/"
+	wac plug watttime/watttime.wasm \
+		--plug httpclient/target/wasm32-wasi/release/httpclient.wasm \
+		-o watttime-composed.wasm
+	@echo -e "${green}PASS${clear} wac plug for watttime/"
 
 .PHONY: build_github_api
 build_github_api:
@@ -79,7 +102,7 @@ build_httpclient:
 	@echo -e "${green}PASS${clear} Build for httpclient/"
 
 .PHONY: build
-build: build_httpclient build_crypto build_openai build_github_api build_cli
+build: build_httpclient build_crypto build_openai build_watttime build_github_api build_cli
 	@echo -e "${green}DONE${clear} Build all the components"
 	@echo -e "next run the following commands make run_* to run the components"
 
@@ -97,7 +120,11 @@ run_get_latest_release:
 
 .PHONY: run_openai
 run_openai:
-	wasmtime run -S http -S cli --dir=. composed.wasm -n dipankar --op openai
+	wasmtime run -S http --dir=. composed.wasm -n dipankar --op openai
+
+.PHONY: run_green
+run_green:
+	wasmtime run -S http --dir=. composed.wasm -n dipankar --op green
 
 .PHONY: clean
 clean:
@@ -105,10 +132,12 @@ clean:
 		cli/target \
 		crypto/crypto.wasm \
 		githubapi/githubapi.wasm \
+		watttime/watttime.wasm \
 		openai/openai.wasm \
 		httpclient/target \
 		wasihttpclient/target \
 		composed.wasm \
 		githubapi-composed.wasm \
+		watttime-composed.wasm \
 		openai-composed.wasm
 	@echo -e "${green}DONE${clear} removed all the compiled files"
