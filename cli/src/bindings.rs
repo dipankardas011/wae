@@ -196,6 +196,60 @@ pub mod dipankardas011 {
             static __FORCE_SECTION_REF: fn() =
                 super::super::super::__link_custom_section_describing_imports;
             use super::super::super::_rt;
+            #[derive(Clone)]
+            pub struct PointData {
+                pub point_time: _rt::String,
+                pub value: f32,
+            }
+            impl ::core::fmt::Debug for PointData {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                    f.debug_struct("PointData")
+                        .field("point-time", &self.point_time)
+                        .field("value", &self.value)
+                        .finish()
+                }
+            }
+            #[derive(Clone)]
+            pub struct Metadata {
+                pub data_point_period_seconds: i32,
+                pub region: _rt::String,
+                pub warnings: _rt::Vec<_rt::String>,
+                pub signal_type: _rt::String,
+                pub model: _rt::String,
+                pub units: _rt::String,
+                pub generated_at_period_seconds: i32,
+                pub generated_at: _rt::String,
+            }
+            impl ::core::fmt::Debug for Metadata {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                    f.debug_struct("Metadata")
+                        .field("data-point-period-seconds", &self.data_point_period_seconds)
+                        .field("region", &self.region)
+                        .field("warnings", &self.warnings)
+                        .field("signal-type", &self.signal_type)
+                        .field("model", &self.model)
+                        .field("units", &self.units)
+                        .field(
+                            "generated-at-period-seconds",
+                            &self.generated_at_period_seconds,
+                        )
+                        .field("generated-at", &self.generated_at)
+                        .finish()
+                }
+            }
+            #[derive(Clone)]
+            pub struct Forecast {
+                pub data: _rt::Vec<PointData>,
+                pub meta: Metadata,
+            }
+            impl ::core::fmt::Debug for Forecast {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                    f.debug_struct("Forecast")
+                        .field("data", &self.data)
+                        .field("meta", &self.meta)
+                        .finish()
+                }
+            }
             #[allow(unused_unsafe, clippy::all)]
             pub fn register(username: &str, password: &str, email: &str) -> bool {
                 unsafe {
@@ -283,7 +337,7 @@ pub mod dipankardas011 {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn get_region(token: &str) -> Option<_rt::String> {
+            pub fn get_region(token: &str, signal_type: &str) -> Option<_rt::String> {
                 unsafe {
                     #[repr(align(4))]
                     struct RetArea([::core::mem::MaybeUninit<u8>; 12]);
@@ -291,30 +345,175 @@ pub mod dipankardas011 {
                     let vec0 = token;
                     let ptr0 = vec0.as_ptr().cast::<u8>();
                     let len0 = vec0.len();
-                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    let vec1 = signal_type;
+                    let ptr1 = vec1.as_ptr().cast::<u8>();
+                    let len1 = vec1.len();
+                    let ptr2 = ret_area.0.as_mut_ptr().cast::<u8>();
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "dipankardas011:watttime/watttime@0.1.0")]
                     extern "C" {
                         #[link_name = "get-region"]
-                        fn wit_import(_: *mut u8, _: usize, _: *mut u8);
+                        fn wit_import(_: *mut u8, _: usize, _: *mut u8, _: usize, _: *mut u8);
                     }
 
                     #[cfg(not(target_arch = "wasm32"))]
-                    fn wit_import(_: *mut u8, _: usize, _: *mut u8) {
+                    fn wit_import(_: *mut u8, _: usize, _: *mut u8, _: usize, _: *mut u8) {
                         unreachable!()
                     }
-                    wit_import(ptr0.cast_mut(), len0, ptr1);
-                    let l2 = i32::from(*ptr1.add(0).cast::<u8>());
-                    match l2 {
+                    wit_import(ptr0.cast_mut(), len0, ptr1.cast_mut(), len1, ptr2);
+                    let l3 = i32::from(*ptr2.add(0).cast::<u8>());
+                    match l3 {
                         0 => None,
                         1 => {
                             let e = {
-                                let l3 = *ptr1.add(4).cast::<*mut u8>();
-                                let l4 = *ptr1.add(8).cast::<usize>();
-                                let len5 = l4;
-                                let bytes5 = _rt::Vec::from_raw_parts(l3.cast(), len5, len5);
+                                let l4 = *ptr2.add(4).cast::<*mut u8>();
+                                let l5 = *ptr2.add(8).cast::<usize>();
+                                let len6 = l5;
+                                let bytes6 = _rt::Vec::from_raw_parts(l4.cast(), len6, len6);
 
-                                _rt::string_lift(bytes5)
+                                _rt::string_lift(bytes6)
+                            };
+                            Some(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
+                    }
+                }
+            }
+            #[allow(unused_unsafe, clippy::all)]
+            pub fn get_forecast(token: &str, region: &str, signal_type: &str) -> Option<Forecast> {
+                unsafe {
+                    #[repr(align(4))]
+                    struct RetArea([::core::mem::MaybeUninit<u8>; 68]);
+                    let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 68]);
+                    let vec0 = token;
+                    let ptr0 = vec0.as_ptr().cast::<u8>();
+                    let len0 = vec0.len();
+                    let vec1 = region;
+                    let ptr1 = vec1.as_ptr().cast::<u8>();
+                    let len1 = vec1.len();
+                    let vec2 = signal_type;
+                    let ptr2 = vec2.as_ptr().cast::<u8>();
+                    let len2 = vec2.len();
+                    let ptr3 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(wasm_import_module = "dipankardas011:watttime/watttime@0.1.0")]
+                    extern "C" {
+                        #[link_name = "get-forecast"]
+                        fn wit_import(
+                            _: *mut u8,
+                            _: usize,
+                            _: *mut u8,
+                            _: usize,
+                            _: *mut u8,
+                            _: usize,
+                            _: *mut u8,
+                        );
+                    }
+
+                    #[cfg(not(target_arch = "wasm32"))]
+                    fn wit_import(
+                        _: *mut u8,
+                        _: usize,
+                        _: *mut u8,
+                        _: usize,
+                        _: *mut u8,
+                        _: usize,
+                        _: *mut u8,
+                    ) {
+                        unreachable!()
+                    }
+                    wit_import(
+                        ptr0.cast_mut(),
+                        len0,
+                        ptr1.cast_mut(),
+                        len1,
+                        ptr2.cast_mut(),
+                        len2,
+                        ptr3,
+                    );
+                    let l4 = i32::from(*ptr3.add(0).cast::<u8>());
+                    match l4 {
+                        0 => None,
+                        1 => {
+                            let e = {
+                                let l5 = *ptr3.add(4).cast::<*mut u8>();
+                                let l6 = *ptr3.add(8).cast::<usize>();
+                                let base11 = l5;
+                                let len11 = l6;
+                                let mut result11 = _rt::Vec::with_capacity(len11);
+                                for i in 0..len11 {
+                                    let base = base11.add(i * 12);
+                                    let e11 = {
+                                        let l7 = *base.add(0).cast::<*mut u8>();
+                                        let l8 = *base.add(4).cast::<usize>();
+                                        let len9 = l8;
+                                        let bytes9 =
+                                            _rt::Vec::from_raw_parts(l7.cast(), len9, len9);
+                                        let l10 = *base.add(8).cast::<f32>();
+
+                                        PointData {
+                                            point_time: _rt::string_lift(bytes9),
+                                            value: l10,
+                                        }
+                                    };
+                                    result11.push(e11);
+                                }
+                                _rt::cabi_dealloc(base11, len11 * 12, 4);
+                                let l12 = *ptr3.add(12).cast::<i32>();
+                                let l13 = *ptr3.add(16).cast::<*mut u8>();
+                                let l14 = *ptr3.add(20).cast::<usize>();
+                                let len15 = l14;
+                                let bytes15 = _rt::Vec::from_raw_parts(l13.cast(), len15, len15);
+                                let l16 = *ptr3.add(24).cast::<*mut u8>();
+                                let l17 = *ptr3.add(28).cast::<usize>();
+                                let base21 = l16;
+                                let len21 = l17;
+                                let mut result21 = _rt::Vec::with_capacity(len21);
+                                for i in 0..len21 {
+                                    let base = base21.add(i * 8);
+                                    let e21 = {
+                                        let l18 = *base.add(0).cast::<*mut u8>();
+                                        let l19 = *base.add(4).cast::<usize>();
+                                        let len20 = l19;
+                                        let bytes20 =
+                                            _rt::Vec::from_raw_parts(l18.cast(), len20, len20);
+
+                                        _rt::string_lift(bytes20)
+                                    };
+                                    result21.push(e21);
+                                }
+                                _rt::cabi_dealloc(base21, len21 * 8, 4);
+                                let l22 = *ptr3.add(32).cast::<*mut u8>();
+                                let l23 = *ptr3.add(36).cast::<usize>();
+                                let len24 = l23;
+                                let bytes24 = _rt::Vec::from_raw_parts(l22.cast(), len24, len24);
+                                let l25 = *ptr3.add(40).cast::<*mut u8>();
+                                let l26 = *ptr3.add(44).cast::<usize>();
+                                let len27 = l26;
+                                let bytes27 = _rt::Vec::from_raw_parts(l25.cast(), len27, len27);
+                                let l28 = *ptr3.add(48).cast::<*mut u8>();
+                                let l29 = *ptr3.add(52).cast::<usize>();
+                                let len30 = l29;
+                                let bytes30 = _rt::Vec::from_raw_parts(l28.cast(), len30, len30);
+                                let l31 = *ptr3.add(56).cast::<i32>();
+                                let l32 = *ptr3.add(60).cast::<*mut u8>();
+                                let l33 = *ptr3.add(64).cast::<usize>();
+                                let len34 = l33;
+                                let bytes34 = _rt::Vec::from_raw_parts(l32.cast(), len34, len34);
+
+                                Forecast {
+                                    data: result11,
+                                    meta: Metadata {
+                                        data_point_period_seconds: l12,
+                                        region: _rt::string_lift(bytes15),
+                                        warnings: result21,
+                                        signal_type: _rt::string_lift(bytes24),
+                                        model: _rt::string_lift(bytes27),
+                                        units: _rt::string_lift(bytes30),
+                                        generated_at_period_seconds: l31,
+                                        generated_at: _rt::string_lift(bytes34),
+                                    },
+                                }
                             };
                             Some(e)
                         }
@@ -423,25 +622,38 @@ mod _rt {
             core::hint::unreachable_unchecked()
         }
     }
+    pub unsafe fn cabi_dealloc(ptr: *mut u8, size: usize, align: usize) {
+        if size == 0 {
+            return;
+        }
+        let layout = alloc::Layout::from_size_align_unchecked(size, align);
+        alloc::dealloc(ptr as *mut u8, layout);
+    }
     extern crate alloc as alloc_crate;
+    pub use alloc_crate::alloc;
 }
 
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.25.0:app:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 588] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xd2\x03\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 859] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xe1\x05\x01A\x02\x01\
 A\x08\x01B\x02\x01@\x01\x06lengthy\0s\x04\0\x0fgenerate-random\x01\0\x03\x01$dip\
 ankardas011:crypto/password@0.1.0\x05\0\x01B\x05\x01@\x02\x03orgs\x04projs\0s\x04\
 \0\x12get-latest-release\x01\0\x04\0\x10get-contributors\x01\0\x01@\x02\x03orgs\x04\
 projs\0{\x04\0\x09get-stars\x01\x01\x03\x01'dipankardas011:githubapi/releases@0.\
 1.0\x05\x01\x01B\x03\x01@\0\x01\0\x04\0\x0ctext-to-text\x01\0\x04\0\x0dtext-to-i\
-mage\x01\0\x03\x01\x1fdipankardas011:openai/llm@0.1.0\x05\x02\x01B\x07\x01@\x03\x08\
-usernames\x08passwords\x05emails\0\x7f\x04\0\x08register\x01\0\x01ks\x01@\0\0\x01\
-\x04\0\x09get-token\x01\x02\x01@\x01\x05tokens\0\x01\x04\0\x0aget-region\x01\x03\
-\x03\x01&dipankardas011:watttime/watttime@0.1.0\x05\x03\x04\x01\x16dipankardas01\
-1:cli/app\x04\0\x0b\x09\x01\0\x03app\x03\0\0\0G\x09producers\x01\x0cprocessed-by\
-\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x060.25.0";
+mage\x01\0\x03\x01\x1fdipankardas011:openai/llm@0.1.0\x05\x02\x01B\x12\x01r\x02\x0a\
+point-times\x05valuev\x04\0\x0apoint-data\x03\0\0\x01ps\x01r\x08\x19data-point-p\
+eriod-secondsz\x06regions\x08warnings\x02\x0bsignal-types\x05models\x05unitss\x1b\
+generated-at-period-secondsz\x0cgenerated-ats\x04\0\x08metadata\x03\0\x03\x01p\x01\
+\x01r\x02\x04data\x05\x04meta\x04\x04\0\x08forecast\x03\0\x06\x01@\x03\x08userna\
+mes\x08passwords\x05emails\0\x7f\x04\0\x08register\x01\x08\x01ks\x01@\0\0\x09\x04\
+\0\x09get-token\x01\x0a\x01@\x02\x05tokens\x0bsignal-types\0\x09\x04\0\x0aget-re\
+gion\x01\x0b\x01k\x07\x01@\x03\x05tokens\x06regions\x0bsignal-types\0\x0c\x04\0\x0c\
+get-forecast\x01\x0d\x03\x01&dipankardas011:watttime/watttime@0.1.0\x05\x03\x04\x01\
+\x16dipankardas011:cli/app\x04\0\x0b\x09\x01\0\x03app\x03\0\0\0G\x09producers\x01\
+\x0cprocessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x060.25.0";
 
 #[inline(never)]
 #[doc(hidden)]

@@ -2,6 +2,7 @@
 mod bindings;
 
 use std::env;
+use std::process::exit;
 use clap::Parser;
 use std::fs;
 use std::time::{Duration, SystemTime};
@@ -78,17 +79,30 @@ async fn main() -> Result<()> {
                 let token = watttime::watttime::get_token();
                 if let None = token {
                     eprintln!("{}", Red.bold().paint("Failed to get token"));
+                    exit(111)
                 }
                 let t = token.unwrap();
-                let region_code = watttime::watttime::get_region(&t);
+                let region_code = watttime::watttime::get_region(&t, "");
                 match region_code {
                     Some(code) => {
                         println!("{}: {code}", Green.bold().paint("Region Code"));
+                        let dd = watttime::watttime::get_forecast(&t, &code, "");
+                        match dd {
+                            Some(d) => {
+                                println!("{}: {d:?}", Blue.paint("Forecast"));
+                            }
+                            None => {
+                                eprintln!("{}", Red.bold().paint("Failed to get forecast"));
+                                exit(111)
+                            }
+                        }
                     }
                     None => {
                         eprintln!("{}", Red.bold().paint("Failed to get region code"));
+                        exit(111)
                     }
                 }
+
             }
         }
         OP_OPENAI => {

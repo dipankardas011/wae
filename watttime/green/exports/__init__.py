@@ -5,7 +5,7 @@ from abc import abstractmethod
 import weakref
 
 from ..types import Result, Ok, Err, Some
-
+from ..exports import watttime
 
 class Watttime(Protocol):
 
@@ -18,7 +18,11 @@ class Watttime(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    def get_region(self, token: str) -> Optional[str]:
+    def get_region(self, token: str, signal_type: str) -> Optional[str]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_forecast(self, token: str, region: str, signal_type: str) -> Optional[watttime.Forecast]:
         raise NotImplementedError
 
 

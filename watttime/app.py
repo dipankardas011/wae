@@ -11,7 +11,7 @@ from termcolor import colored, cprint
 
 class Watttime(exports.Watttime):
     @override
-    def get_region(self, token: str) -> str | None:
+    def get_region(self, token: str, signal_type: str) -> str | None:
         try:
             http_res = outgoing_http.get_request(
                 method="GET",
@@ -30,7 +30,9 @@ class Watttime(exports.Watttime):
             loc = data['loc']
             lat_lon = loc.split(",")
             print(f"Latitude: {lat_lon[0]}, Longitude: {lat_lon[1]}")
-            url = f"https://api.watttime.org/v3/region-from-loc?latitude={lat_lon[0]}&longitude={lat_lon[1]}&signal_type=co2_moer"
+            if signal_type == "":
+                signal_type = "co2_moer"
+            url = f"https://api.watttime.org/v3/region-from-loc?latitude={lat_lon[0]}&longitude={lat_lon[1]}&signal_type={signal_type}"
             http_res = outgoing_http.get_request(
                 method="GET",
                 headers=[
@@ -53,11 +55,70 @@ class Watttime(exports.Watttime):
             traceback.print_exc()
             return None
 
-    # def get_forecast(self) -> dict:
-    #     """
-    #     https://docs.watttime.org/#tag/GET-Forecast/operation/get_current_forecast_v3_forecast_get
-    #     """
-    #     ...
+    @override
+    def get_forecast(self, token: str, region: str, signal_type) -> exports.watttime.Forecast | None:
+        try:
+            if signal_type == "":
+                signal_type = "co2_moer"
+            url = f"https://api.watttime.org/v3/forecast?region={region}&horizon_hours=1&signal_type={signal_type}"
+            http_res = outgoing_http.get_request(
+                method="GET",
+                headers=[
+                    outgoing_http.RequestHeader(
+                        key="Authorization", value=f"Bearer {token}",
+                    )
+                ],
+                url=url,
+                body=None)
+
+            if http_res.status_code == 403:
+                data = json.loads(http_res.body)
+                print(colored(f"Trying to recover and use default region 'CAISO_NORTH' {data['error']}=>{data['message']}", "light_yellow"))
+                url = f"https://api.watttime.org/v3/forecast?region=CAISO_NORTH&horizon_hours=1&signal_type={signal_type}"
+                http_res = outgoing_http.get_request(
+                    method="GET",
+                    headers=[
+                        outgoing_http.RequestHeader(
+                            key="Authorization", value=f"Bearer {token}",
+                        )
+                    ],
+                    url=url,
+                    body=None)
+                if http_res.status_code != 200:
+                    raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
+
+            elif http_res.status_code != 200:
+                raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
+
+            data = json.loads(http_res.body)
+            data_pointers = [exports.watttime.PointData(
+                point_time=item['point_time'],
+                value=item['value']) for item in data['data']]
+
+            meta_pointers = data['meta']
+            meta_warnings = [f"{item['type']}:{item['message']}" for item in meta_pointers['warnings']]
+
+            obj = exports.watttime.Forecast(
+                data=data_pointers,
+                meta=exports.watttime.Metadata(
+                    data_point_period_seconds=meta_pointers['data_point_period_seconds'],
+                    region=meta_pointers['region'],
+                    signal_type=meta_pointers['signal_type'],
+                    model=meta_pointers['model']['date'],
+                    warnings=meta_warnings,
+                    units=meta_pointers['units'],
+                    generated_at=meta_pointers['generated_at'],
+                    generated_at_period_seconds=meta_pointers['generated_at_period_seconds'],
+                )
+            )
+            return obj
+
+        except Exception as e:
+            text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
+            print(f"{text}")
+            traceback.print_exc()
+            return None
+
     #
     # def get_range_of_historical_signal_data(self) -> dict:
     #     ...
