@@ -10,6 +10,29 @@ from termcolor import colored, cprint
 
 
 class Watttime(exports.Watttime):
+    # TODO(dipankar): need to think of the dict type
+    def get_region(self) -> str:
+        # curl to ipinfo.io
+        # { ...
+        # "loc": "ABCD,EFGH",
+        # ...}
+        return "US"
+
+    def get_forecast(self) -> dict:
+        """
+        https://docs.watttime.org/#tag/GET-Forecast/operation/get_current_forecast_v3_forecast_get
+        """
+        ...
+
+    def get_range_of_historical_signal_data(self) -> dict:
+        ...
+
+    def get_current_CO2_MOER_index(self) -> dict:
+        """
+        https://docs.watttime.org/#tag/GET-Index/operation/get_signal_index_v3_signal_index_get
+        """
+        ...
+
     @override
     def register(self, username: str, password: str, email: str) -> bool:
 
