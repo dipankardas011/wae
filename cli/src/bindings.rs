@@ -282,6 +282,46 @@ pub mod dipankardas011 {
                     }
                 }
             }
+            #[allow(unused_unsafe, clippy::all)]
+            pub fn get_region(token: &str) -> Option<_rt::String> {
+                unsafe {
+                    #[repr(align(4))]
+                    struct RetArea([::core::mem::MaybeUninit<u8>; 12]);
+                    let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 12]);
+                    let vec0 = token;
+                    let ptr0 = vec0.as_ptr().cast::<u8>();
+                    let len0 = vec0.len();
+                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(wasm_import_module = "dipankardas011:watttime/watttime@0.1.0")]
+                    extern "C" {
+                        #[link_name = "get-region"]
+                        fn wit_import(_: *mut u8, _: usize, _: *mut u8);
+                    }
+
+                    #[cfg(not(target_arch = "wasm32"))]
+                    fn wit_import(_: *mut u8, _: usize, _: *mut u8) {
+                        unreachable!()
+                    }
+                    wit_import(ptr0.cast_mut(), len0, ptr1);
+                    let l2 = i32::from(*ptr1.add(0).cast::<u8>());
+                    match l2 {
+                        0 => None,
+                        1 => {
+                            let e = {
+                                let l3 = *ptr1.add(4).cast::<*mut u8>();
+                                let l4 = *ptr1.add(8).cast::<usize>();
+                                let len5 = l4;
+                                let bytes5 = _rt::Vec::from_raw_parts(l3.cast(), len5, len5);
+
+                                _rt::string_lift(bytes5)
+                            };
+                            Some(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
+                    }
+                }
+            }
         }
     }
 }
@@ -389,19 +429,19 @@ mod _rt {
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.25.0:app:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 561] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xb7\x03\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 588] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xd2\x03\x01A\x02\x01\
 A\x08\x01B\x02\x01@\x01\x06lengthy\0s\x04\0\x0fgenerate-random\x01\0\x03\x01$dip\
 ankardas011:crypto/password@0.1.0\x05\0\x01B\x05\x01@\x02\x03orgs\x04projs\0s\x04\
 \0\x12get-latest-release\x01\0\x04\0\x10get-contributors\x01\0\x01@\x02\x03orgs\x04\
 projs\0{\x04\0\x09get-stars\x01\x01\x03\x01'dipankardas011:githubapi/releases@0.\
 1.0\x05\x01\x01B\x03\x01@\0\x01\0\x04\0\x0ctext-to-text\x01\0\x04\0\x0dtext-to-i\
-mage\x01\0\x03\x01\x1fdipankardas011:openai/llm@0.1.0\x05\x02\x01B\x05\x01@\x03\x08\
+mage\x01\0\x03\x01\x1fdipankardas011:openai/llm@0.1.0\x05\x02\x01B\x07\x01@\x03\x08\
 usernames\x08passwords\x05emails\0\x7f\x04\0\x08register\x01\0\x01ks\x01@\0\0\x01\
-\x04\0\x09get-token\x01\x02\x03\x01&dipankardas011:watttime/watttime@0.1.0\x05\x03\
-\x04\x01\x16dipankardas011:cli/app\x04\0\x0b\x09\x01\0\x03app\x03\0\0\0G\x09prod\
-ucers\x01\x0cprocessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x06\
-0.25.0";
+\x04\0\x09get-token\x01\x02\x01@\x01\x05tokens\0\x01\x04\0\x0aget-region\x01\x03\
+\x03\x01&dipankardas011:watttime/watttime@0.1.0\x05\x03\x04\x01\x16dipankardas01\
+1:cli/app\x04\0\x0b\x09\x01\0\x03app\x03\0\0\0G\x09producers\x01\x0cprocessed-by\
+\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x060.25.0";
 
 #[inline(never)]
 #[doc(hidden)]

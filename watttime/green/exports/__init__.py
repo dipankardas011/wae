@@ -14,7 +14,11 @@ class Watttime(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    def get_token(self) -> str | None:
+    def get_token(self) -> Optional[str]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_region(self, token: str) -> Optional[str]:
         raise NotImplementedError
 
 

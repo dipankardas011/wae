@@ -50,7 +50,7 @@ async fn main() -> Result<()> {
 
     match args.operation.as_str() {
         OP_GREEN => {
-            println!("{}", Cyan.paint("> Enter [1] register [2] login"));
+            println!("{}", Cyan.paint("> Enter [1] register [2] get region code based on curr loc"));
             let mut input = String::new();
             std::io::stdin().read_line(&mut input).expect("Failed to read line");
             let choice: i32 = input.trim().parse().expect("Invalid Input");
@@ -76,9 +76,18 @@ async fn main() -> Result<()> {
                 watttime::watttime::register(&username, &password, &email);
             } else if choice == 2 {
                 let token = watttime::watttime::get_token();
-                match token {
-                    Some(t) => println!("{}: {t}", Green.bold().paint("Token")),
-                    None => eprintln!("{}", Red.bold().paint("Failed to get token")),
+                if let None = token {
+                    eprintln!("{}", Red.bold().paint("Failed to get token"));
+                }
+                let t = token.unwrap();
+                let region_code = watttime::watttime::get_region(&t);
+                match region_code {
+                    Some(code) => {
+                        println!("{}: {code}", Green.bold().paint("Region Code"));
+                    }
+                    None => {
+                        eprintln!("{}", Red.bold().paint("Failed to get region code"));
+                    }
                 }
             }
         }
