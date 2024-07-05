@@ -210,7 +210,7 @@ pub mod dipankardas011 {
                 }
             }
             #[derive(Clone)]
-            pub struct Metadata {
+            pub struct MetadataForecast {
                 pub data_point_period_seconds: i32,
                 pub region: _rt::String,
                 pub warnings: _rt::Vec<_rt::String>,
@@ -220,9 +220,9 @@ pub mod dipankardas011 {
                 pub generated_at_period_seconds: i32,
                 pub generated_at: _rt::String,
             }
-            impl ::core::fmt::Debug for Metadata {
+            impl ::core::fmt::Debug for MetadataForecast {
                 fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-                    f.debug_struct("Metadata")
+                    f.debug_struct("MetadataForecast")
                         .field("data-point-period-seconds", &self.data_point_period_seconds)
                         .field("region", &self.region)
                         .field("warnings", &self.warnings)
@@ -238,13 +238,47 @@ pub mod dipankardas011 {
                 }
             }
             #[derive(Clone)]
+            pub struct MetadataCo2MoerIndex {
+                pub data_point_period_seconds: i32,
+                pub region: _rt::String,
+                pub warnings: _rt::Vec<_rt::String>,
+                pub signal_type: _rt::String,
+                pub model: _rt::String,
+                pub units: _rt::String,
+            }
+            impl ::core::fmt::Debug for MetadataCo2MoerIndex {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                    f.debug_struct("MetadataCo2MoerIndex")
+                        .field("data-point-period-seconds", &self.data_point_period_seconds)
+                        .field("region", &self.region)
+                        .field("warnings", &self.warnings)
+                        .field("signal-type", &self.signal_type)
+                        .field("model", &self.model)
+                        .field("units", &self.units)
+                        .finish()
+                }
+            }
+            #[derive(Clone)]
             pub struct Forecast {
                 pub data: _rt::Vec<PointData>,
-                pub meta: Metadata,
+                pub meta: MetadataForecast,
             }
             impl ::core::fmt::Debug for Forecast {
                 fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                     f.debug_struct("Forecast")
+                        .field("data", &self.data)
+                        .field("meta", &self.meta)
+                        .finish()
+                }
+            }
+            #[derive(Clone)]
+            pub struct Co2MoerIndex {
+                pub data: PointData,
+                pub meta: MetadataCo2MoerIndex,
+            }
+            impl ::core::fmt::Debug for Co2MoerIndex {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                    f.debug_struct("Co2MoerIndex")
                         .field("data", &self.data)
                         .field("meta", &self.meta)
                         .finish()
@@ -503,7 +537,7 @@ pub mod dipankardas011 {
 
                                 Forecast {
                                     data: result11,
-                                    meta: Metadata {
+                                    meta: MetadataForecast {
                                         data_point_period_seconds: l12,
                                         region: _rt::string_lift(bytes15),
                                         warnings: result21,
@@ -512,6 +546,130 @@ pub mod dipankardas011 {
                                         units: _rt::string_lift(bytes30),
                                         generated_at_period_seconds: l31,
                                         generated_at: _rt::string_lift(bytes34),
+                                    },
+                                }
+                            };
+                            Some(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
+                    }
+                }
+            }
+            #[allow(unused_unsafe, clippy::all)]
+            pub fn get_current_co2_moer_index(
+                token: &str,
+                region: &str,
+                signal_type: &str,
+            ) -> Option<Co2MoerIndex> {
+                unsafe {
+                    #[repr(align(4))]
+                    struct RetArea([::core::mem::MaybeUninit<u8>; 60]);
+                    let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 60]);
+                    let vec0 = token;
+                    let ptr0 = vec0.as_ptr().cast::<u8>();
+                    let len0 = vec0.len();
+                    let vec1 = region;
+                    let ptr1 = vec1.as_ptr().cast::<u8>();
+                    let len1 = vec1.len();
+                    let vec2 = signal_type;
+                    let ptr2 = vec2.as_ptr().cast::<u8>();
+                    let len2 = vec2.len();
+                    let ptr3 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(wasm_import_module = "dipankardas011:watttime/watttime@0.1.0")]
+                    extern "C" {
+                        #[link_name = "get-current-CO2-MOER-index"]
+                        fn wit_import(
+                            _: *mut u8,
+                            _: usize,
+                            _: *mut u8,
+                            _: usize,
+                            _: *mut u8,
+                            _: usize,
+                            _: *mut u8,
+                        );
+                    }
+
+                    #[cfg(not(target_arch = "wasm32"))]
+                    fn wit_import(
+                        _: *mut u8,
+                        _: usize,
+                        _: *mut u8,
+                        _: usize,
+                        _: *mut u8,
+                        _: usize,
+                        _: *mut u8,
+                    ) {
+                        unreachable!()
+                    }
+                    wit_import(
+                        ptr0.cast_mut(),
+                        len0,
+                        ptr1.cast_mut(),
+                        len1,
+                        ptr2.cast_mut(),
+                        len2,
+                        ptr3,
+                    );
+                    let l4 = i32::from(*ptr3.add(0).cast::<u8>());
+                    match l4 {
+                        0 => None,
+                        1 => {
+                            let e = {
+                                let l5 = *ptr3.add(4).cast::<*mut u8>();
+                                let l6 = *ptr3.add(8).cast::<usize>();
+                                let len7 = l6;
+                                let bytes7 = _rt::Vec::from_raw_parts(l5.cast(), len7, len7);
+                                let l8 = *ptr3.add(12).cast::<f32>();
+                                let l9 = *ptr3.add(16).cast::<i32>();
+                                let l10 = *ptr3.add(20).cast::<*mut u8>();
+                                let l11 = *ptr3.add(24).cast::<usize>();
+                                let len12 = l11;
+                                let bytes12 = _rt::Vec::from_raw_parts(l10.cast(), len12, len12);
+                                let l13 = *ptr3.add(28).cast::<*mut u8>();
+                                let l14 = *ptr3.add(32).cast::<usize>();
+                                let base18 = l13;
+                                let len18 = l14;
+                                let mut result18 = _rt::Vec::with_capacity(len18);
+                                for i in 0..len18 {
+                                    let base = base18.add(i * 8);
+                                    let e18 = {
+                                        let l15 = *base.add(0).cast::<*mut u8>();
+                                        let l16 = *base.add(4).cast::<usize>();
+                                        let len17 = l16;
+                                        let bytes17 =
+                                            _rt::Vec::from_raw_parts(l15.cast(), len17, len17);
+
+                                        _rt::string_lift(bytes17)
+                                    };
+                                    result18.push(e18);
+                                }
+                                _rt::cabi_dealloc(base18, len18 * 8, 4);
+                                let l19 = *ptr3.add(36).cast::<*mut u8>();
+                                let l20 = *ptr3.add(40).cast::<usize>();
+                                let len21 = l20;
+                                let bytes21 = _rt::Vec::from_raw_parts(l19.cast(), len21, len21);
+                                let l22 = *ptr3.add(44).cast::<*mut u8>();
+                                let l23 = *ptr3.add(48).cast::<usize>();
+                                let len24 = l23;
+                                let bytes24 = _rt::Vec::from_raw_parts(l22.cast(), len24, len24);
+                                let l25 = *ptr3.add(52).cast::<*mut u8>();
+                                let l26 = *ptr3.add(56).cast::<usize>();
+                                let len27 = l26;
+                                let bytes27 = _rt::Vec::from_raw_parts(l25.cast(), len27, len27);
+
+                                Co2MoerIndex {
+                                    data: PointData {
+                                        point_time: _rt::string_lift(bytes7),
+                                        value: l8,
+                                    },
+                                    meta: MetadataCo2MoerIndex {
+                                        data_point_period_seconds: l9,
+                                        region: _rt::string_lift(bytes12),
+                                        warnings: result18,
+                                        signal_type: _rt::string_lift(bytes21),
+                                        model: _rt::string_lift(bytes24),
+                                        units: _rt::string_lift(bytes27),
                                     },
                                 }
                             };
@@ -636,24 +794,29 @@ mod _rt {
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.25.0:app:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 859] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xe1\x05\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1074] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xb8\x07\x01A\x02\x01\
 A\x08\x01B\x02\x01@\x01\x06lengthy\0s\x04\0\x0fgenerate-random\x01\0\x03\x01$dip\
 ankardas011:crypto/password@0.1.0\x05\0\x01B\x05\x01@\x02\x03orgs\x04projs\0s\x04\
 \0\x12get-latest-release\x01\0\x04\0\x10get-contributors\x01\0\x01@\x02\x03orgs\x04\
 projs\0{\x04\0\x09get-stars\x01\x01\x03\x01'dipankardas011:githubapi/releases@0.\
 1.0\x05\x01\x01B\x03\x01@\0\x01\0\x04\0\x0ctext-to-text\x01\0\x04\0\x0dtext-to-i\
-mage\x01\0\x03\x01\x1fdipankardas011:openai/llm@0.1.0\x05\x02\x01B\x12\x01r\x02\x0a\
+mage\x01\0\x03\x01\x1fdipankardas011:openai/llm@0.1.0\x05\x02\x01B\x19\x01r\x02\x0a\
 point-times\x05valuev\x04\0\x0apoint-data\x03\0\0\x01ps\x01r\x08\x19data-point-p\
 eriod-secondsz\x06regions\x08warnings\x02\x0bsignal-types\x05models\x05unitss\x1b\
-generated-at-period-secondsz\x0cgenerated-ats\x04\0\x08metadata\x03\0\x03\x01p\x01\
-\x01r\x02\x04data\x05\x04meta\x04\x04\0\x08forecast\x03\0\x06\x01@\x03\x08userna\
-mes\x08passwords\x05emails\0\x7f\x04\0\x08register\x01\x08\x01ks\x01@\0\0\x09\x04\
-\0\x09get-token\x01\x0a\x01@\x02\x05tokens\x0bsignal-types\0\x09\x04\0\x0aget-re\
-gion\x01\x0b\x01k\x07\x01@\x03\x05tokens\x06regions\x0bsignal-types\0\x0c\x04\0\x0c\
-get-forecast\x01\x0d\x03\x01&dipankardas011:watttime/watttime@0.1.0\x05\x03\x04\x01\
-\x16dipankardas011:cli/app\x04\0\x0b\x09\x01\0\x03app\x03\0\0\0G\x09producers\x01\
-\x0cprocessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x060.25.0";
+generated-at-period-secondsz\x0cgenerated-ats\x04\0\x11metadata-forecast\x03\0\x03\
+\x01r\x06\x19data-point-period-secondsz\x06regions\x08warnings\x02\x0bsignal-typ\
+es\x05models\x05unitss\x04\0\x17metadata-co2-moer-index\x03\0\x05\x01p\x01\x01r\x02\
+\x04data\x07\x04meta\x04\x04\0\x08forecast\x03\0\x08\x01r\x02\x04data\x01\x04met\
+a\x06\x04\0\x0eco2-moer-index\x03\0\x0a\x01@\x03\x08usernames\x08passwords\x05em\
+ails\0\x7f\x04\0\x08register\x01\x0c\x01ks\x01@\0\0\x0d\x04\0\x09get-token\x01\x0e\
+\x01@\x02\x05tokens\x0bsignal-types\0\x0d\x04\0\x0aget-region\x01\x0f\x01k\x09\x01\
+@\x03\x05tokens\x06regions\x0bsignal-types\0\x10\x04\0\x0cget-forecast\x01\x11\x01\
+k\x0b\x01@\x03\x05tokens\x06regions\x0bsignal-types\0\x12\x04\0\x1aget-current-C\
+O2-MOER-index\x01\x13\x03\x01&dipankardas011:watttime/watttime@0.1.0\x05\x03\x04\
+\x01\x16dipankardas011:cli/app\x04\0\x0b\x09\x01\0\x03app\x03\0\0\0G\x09producer\
+s\x01\x0cprocessed-by\x02\x0dwit-component\x070.208.1\x10wit-bindgen-rust\x060.2\
+5.0";
 
 #[inline(never)]
 #[doc(hidden)]

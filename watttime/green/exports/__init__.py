@@ -25,4 +25,8 @@ class Watttime(Protocol):
     def get_forecast(self, token: str, region: str, signal_type: str) -> Optional[watttime.Forecast]:
         raise NotImplementedError
 
+    @abstractmethod
+    def get_current_co2_moer_index(self, token: str, region: str, signal_type: str) -> Optional[watttime.Co2MoerIndex]:
+        raise NotImplementedError
+
 

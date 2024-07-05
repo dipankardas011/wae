@@ -100,7 +100,7 @@ class Watttime(exports.Watttime):
 
             obj = exports.watttime.Forecast(
                 data=data_pointers,
-                meta=exports.watttime.Metadata(
+                meta=exports.watttime.MetadataForecast(
                     data_point_period_seconds=meta_pointers['data_point_period_seconds'],
                     region=meta_pointers['region'],
                     signal_type=meta_pointers['signal_type'],
@@ -119,15 +119,66 @@ class Watttime(exports.Watttime):
             traceback.print_exc()
             return None
 
-    #
-    # def get_range_of_historical_signal_data(self) -> dict:
-    #     ...
-    #
-    # def get_current_CO2_MOER_index(self) -> dict:
-    #     """
-    #     https://docs.watttime.org/#tag/GET-Index/operation/get_signal_index_v3_signal_index_get
-    #     """
-    #     ...
+    def get_current_co2_moer_index(self, token: str, region: str, signal_type: str) -> exports.watttime.Co2MoerIndex | None:
+        try:
+            if signal_type == "":
+                signal_type = "co2_moer"
+            url = f"https://api.watttime.org/v3/signal-index?region={region}&signal_type={signal_type}"
+            http_res = outgoing_http.get_request(
+                method="GET",
+                headers=[
+                    outgoing_http.RequestHeader(
+                        key="Authorization", value=f"Bearer {token}",
+                    )
+                ],
+                url=url,
+                body=None)
+
+            if http_res.status_code == 403:
+                data = json.loads(http_res.body)
+                print(colored(f"Trying to recover and use default region 'CAISO_NORTH' {data['error']}=>{data['message']}", "light_yellow"))
+                url = f"https://api.watttime.org/v3/signal-index?region=CAISO_NORTH&signal_type={signal_type}"
+                http_res = outgoing_http.get_request(
+                    method="GET",
+                    headers=[
+                        outgoing_http.RequestHeader(
+                            key="Authorization", value=f"Bearer {token}",
+                        )
+                    ],
+                    url=url,
+                    body=None)
+                if http_res.status_code != 200:
+                    raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
+
+            elif http_res.status_code != 200:
+                raise Exception(f"StatusCode: {http_res.status_code}, Reason: {str(http_res.body)}")
+
+            data = json.loads(http_res.body)
+            data_pointers = [exports.watttime.PointData(
+                point_time=item['point_time'],
+                value=item['value']) for item in data['data']]
+
+            meta_pointers = data['meta']
+            meta_warnings = [f"{item['type']}:{item['message']}" for item in meta_pointers['warnings']]
+
+            obj = exports.watttime.Co2MoerIndex(
+                data=data_pointers[0],
+                meta=exports.watttime.MetadataCo2MoerIndex(
+                    data_point_period_seconds=meta_pointers['data_point_period_seconds'],
+                    region=meta_pointers['region'],
+                    signal_type=meta_pointers['signal_type'],
+                    model=f"{meta_pointers['model']}",
+                    warnings=meta_warnings,
+                    units=meta_pointers['units'],
+                )
+            )
+            return obj
+
+        except Exception as e:
+            text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
+            print(f"{text}")
+            traceback.print_exc()
+            return None
 
     @override
     def register(self, username: str, password: str, email: str) -> bool:

@@ -5,7 +5,7 @@ interface watttime {
         point-time: string,
         value: f32
     } 
-    record metadata {
+    record metadata-forecast {
         data-point-period-seconds: s32,
         region: string,
         warnings: list<string>,
@@ -15,14 +15,27 @@ interface watttime {
         generated-at-period-seconds: s32,
         generated-at: string
     }
+    record metadata-co2-moer-index {
+        data-point-period-seconds: s32,
+        region: string,
+        warnings: list<string>,
+        signal-type: string,
+        model: string,
+        units: string,
+    }
     record forecast {
         data: list<point-data>,
-        meta: metadata
+        meta: metadata-forecast
+    }
+    record co2-moer-index {
+        data: point-data,
+        meta: metadata-co2-moer-index
     }
     register: func(username: string, password: string, email: string) -> bool;
     get-token: func() -> option<string>;
     get-region: func(token: string, signal-type: string) -> option<string>;
     get-forecast: func(token: string, region: string, signal-type: string) -> option<forecast>;
+    get-current-CO2-MOER-index: func(token: string, region: string, signal-type: string) -> option<co2-moer-index>;
 }
 
 world green {

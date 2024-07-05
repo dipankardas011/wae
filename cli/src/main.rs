@@ -2,7 +2,6 @@
 mod bindings;
 
 use std::env;
-use std::process::exit;
 use clap::Parser;
 use std::fs;
 use std::time::{Duration, SystemTime};
@@ -51,11 +50,11 @@ async fn main() -> Result<()> {
 
     match args.operation.as_str() {
         OP_GREEN => {
-            println!("{}", Cyan.paint("> Enter [1] register [2] get region code based on curr loc"));
+            println!("{}", Cyan.paint("> Enter [1] register [2] get region code based on curr loc [3] get forecast based on current loc [4] get current CO2 MOER index"));
             let mut input = String::new();
             std::io::stdin().read_line(&mut input).expect("Failed to read line");
             let choice: i32 = input.trim().parse().expect("Invalid Input");
-            if choice < 1 || choice > 2 {
+            if choice < 1 || choice > 4 {
                 eprintln!("{}", Red.bold().paint("Invalid choice"));
             }
             if choice == 1 {
@@ -76,33 +75,87 @@ async fn main() -> Result<()> {
 
                 watttime::watttime::register(&username, &password, &email);
             } else if choice == 2 {
+
+                println!("{}", Cyan.paint(" > Enter Watttime Signal type co2_moer or health_damage: "));
+                let mut input = String::new();
+                std::io::stdin().read_line(&mut input).expect("Failed to read line");
+                let choice: String= input.trim().parse().expect("Invalid Input");
+                if choice != "co2_moer" && choice != "health_damage" {
+                    eprintln!("{}", Red.bold().paint("Invalid choice"));
+                }
+
                 let token = watttime::watttime::get_token();
                 if let None = token {
                     eprintln!("{}", Red.bold().paint("Failed to get token"));
-                    exit(111)
+                }
+                let t = token.unwrap();
+                let region_code = watttime::watttime::get_region(&t, &choice);
+                match region_code {
+                    Some(code) => {
+                        println!("{}: {code}", Green.bold().paint("Region Code"));
+                    }
+                    None => {
+                        eprintln!("{}", Red.bold().paint("Failed to get region code"));
+                    }
+                }
+            } else if choice == 3 {
+                println!("{}", Cyan.paint(" > Enter Watttime Signal type co2_moer or health_damage: "));
+                let mut input = String::new();
+                std::io::stdin().read_line(&mut input).expect("Failed to read line");
+                let choice: String= input.trim().parse().expect("Invalid Input");
+                if choice != "co2_moer" && choice != "health_damage" {
+                    eprintln!("{}", Red.bold().paint("Invalid choice"));
+                }
+
+                let token = watttime::watttime::get_token();
+                if let None = token {
+                    eprintln!("{}", Red.bold().paint("Failed to get token"));
+                }
+                let t = token.unwrap();
+                let region_code = watttime::watttime::get_region(&t, &choice);
+                match region_code {
+                    Some(code) => {
+                        println!("{}: {code}", Green.bold().paint("Region Code"));
+
+                        let dd = watttime::watttime::get_forecast(&t, &code, &choice);
+                        match dd {
+                            Some(d) => {
+                                println!("{}\n{d:?}", Blue.paint("Most recently generated forecast for the specified region and signal_type. Forecasts are generated periodically (e.g. at 5-minute frequency, this frequency is described in the generated_at_period_seconds metadata), and there is a data list made up of point_time and value pairs in the forecast horizon (e.g. a 24-hr forecast horizon with 5-min frequency results in 288 values). Each forecast response is valid starting from its generated_at time until it is superseded by a new forecast with a new generated_at time, and each point_time in the data list is valid from its point_time for the duration described in data_point_period_seconds"));
+                            }
+                            None => {
+                                eprintln!("{}", Red.bold().paint("Failed to get forecast"));
+                            }
+                        }
+                    }
+                    None => {
+                        eprintln!("{}", Red.bold().paint("Failed to get region code"));
+                    }
+                }
+            } else {
+                let token = watttime::watttime::get_token();
+                if let None = token {
+                    eprintln!("{}", Red.bold().paint("Failed to get token"));
                 }
                 let t = token.unwrap();
                 let region_code = watttime::watttime::get_region(&t, "");
                 match region_code {
                     Some(code) => {
                         println!("{}: {code}", Green.bold().paint("Region Code"));
-                        let dd = watttime::watttime::get_forecast(&t, &code, "");
+                        let dd = watttime::watttime::get_current_co2_moer_index(&t, &code, ""); // current
+                        // only co2_moer
                         match dd {
                             Some(d) => {
-                                println!("{}: {d:?}", Blue.paint("Forecast"));
+                                println!("{}\n{d:?}", Blue.paint("Current Index value for the specified region for the co2_moer signal type. This 0-100 value is the statistical percentile of the current MOER relative to the upcoming 24 hours of forecast MOER values for the specified location (100=dirtiest, 0=cleanest). Values are updated periodically (e.g. at 5-minute frequency), and each value is valid starting from its point_time for the duration described in data_point_period_seconds. No historical query is available for this endpoint."));
                             }
                             None => {
                                 eprintln!("{}", Red.bold().paint("Failed to get forecast"));
-                                exit(111)
                             }
                         }
                     }
                     None => {
                         eprintln!("{}", Red.bold().paint("Failed to get region code"));
-                        exit(111)
                     }
                 }
-
             }
         }
         OP_OPENAI => {

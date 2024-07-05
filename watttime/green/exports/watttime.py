@@ -13,7 +13,7 @@ class PointData:
     value: float
 
 @dataclass
-class Metadata:
+class MetadataForecast:
     data_point_period_seconds: int
     region: str
     warnings: List[str]
@@ -24,7 +24,21 @@ class Metadata:
     generated_at: str
 
 @dataclass
+class MetadataCo2MoerIndex:
+    data_point_period_seconds: int
+    region: str
+    warnings: List[str]
+    signal_type: str
+    model: str
+    units: str
+
+@dataclass
 class Forecast:
     data: List[PointData]
-    meta: Metadata
+    meta: MetadataForecast
+
+@dataclass
+class Co2MoerIndex:
+    data: PointData
+    meta: MetadataCo2MoerIndex
 
