@@ -1,0 +1,4 @@
+[httpclient]
+path = "../../httpclient/wit"
+sha256 = "6d36dd8541e60e2a29c709e4cf2a97af9cbcd9d350970be1d08b4a20dfcd05e4"
+sha512 = "1fe36dd68c61d8c5ef9a1115f5e944f10a9998d161dbca57a41603a4775a8876ae3564b246f2ab0c9b3f1457ec23d8ffbdb8dd1e8052f19698c3ed901c5e17a6"

@@ -3,6 +3,7 @@ from project import exports
 from project.imports import outgoing_http
 import json
 import traceback
+from termcolor import colored, cprint
 
 
 class Releases(exports.Releases):
@@ -21,7 +22,8 @@ class Releases(exports.Releases):
             data = json.loads(http_res.body)
             return data["tag_name"]
         except Exception as e:
-            print(f"Caught Exception: {e}")
+            text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
+            print(f"{text}")
             traceback.print_exc()
             return "Failed to get the response"
 
@@ -48,7 +50,8 @@ class Releases(exports.Releases):
 
             return ret
         except Exception as e:
-            print(f"Caught Exception: {e}")
+            text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
+            print(f"{text}")
             traceback.print_exc()
             return "Failed to get the response"
 
@@ -79,7 +82,7 @@ class Releases(exports.Releases):
 
             return len(githubId)
         except Exception as e:
-            print(f"Caught Exception: {e}")
+            text = colored(f"Caught Exception: {e}", "red", attrs=["reverse", "blink"])
+            print(f"{text}")
             traceback.print_exc()
-            print("Failed to get the response")
             return -999

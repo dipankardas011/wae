@@ -4,5 +4,6 @@ world app {
     import dipankardas011:crypto/password@0.1.0;
     import dipankardas011:githubapi/releases@0.1.0;
     import dipankardas011:openai/llm@0.1.0;
+    import dipankardas011:watttime/watttime@0.1.0;
 }
 
