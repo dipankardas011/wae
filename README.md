@@ -33,3 +33,33 @@ graph TD;
 > `httpclient` uses `waki` crate for the http client
 
 `wasihttpclient` uses the `wasi:http` crate for the http client which is actually used by `waki`
+
+## Component descriptions
+### CLI 
+is the main entry point for the application, it is written in rust and uses the `clap` crate for the command line parsing.
+
+### Crypto
+is the module for cryptographic computing, for now its random password generator
+
+### Githubapi
+is the module for interacting with the github api, for now its just a simple get request to the github api
+- latest release of a public repo
+- list contributors of a public repo
+- stars and top 10 of them of a public repo
+
+### OpenAI
+is the module for interacting with the OpenAI language model
+- simple chat bot
+- text to image generation as well
+
+### WattTime
+is the module for interacting with the WattTime api
+- register a free account
+- your location and also region code 
+- get forcast for 1 hour
+- get current Co2 moer index
+
+### HTTPClient
+is the module for interacting with the http client, it is written in rust and uses the `waki` which is built on top of `wasi:http` crate for the http client
+
+used by `githubapi`, `watttime` and `openai`
