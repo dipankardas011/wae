@@ -29,7 +29,6 @@ class Watttime(exports.Watttime):
             data = json.loads(http_res.body)
             loc = data['loc']
             lat_lon = loc.split(",")
-            print(f"Latitude: {lat_lon[0]}, Longitude: {lat_lon[1]}")
             if signal_type == "":
                 signal_type = "co2_moer"
             url = f"https://api.watttime.org/v3/region-from-loc?latitude={lat_lon[0]}&longitude={lat_lon[1]}&signal_type={signal_type}"
