@@ -139,6 +139,7 @@ clean:
 		httpclient/target \
 		wasihttpclient/target \
 		composed.wasm \
+		composed.cwasm \
 		githubapi-composed.wasm \
 		watttime-composed.wasm \
 		openai-composed.wasm
