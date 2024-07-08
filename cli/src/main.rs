@@ -1,7 +1,6 @@
 #[allow(warnings)]
 mod bindings;
 
-use std::env;
 use clap::Parser;
 use std::fs;
 use std::time::{Duration, SystemTime};
@@ -12,16 +11,64 @@ use bindings::dipankardas011::{
     openai::llm,
     watttime,
 };
+use waki::{handler, ErrorCode, Request, Response};
 use anyhow::Result;
 use ansi_term;
-use ansi_term::Colour::{Cyan, Black, Red, Green, Blue, Yellow};
+use ansi_term::Colour::{Cyan, Red, Green, Blue, Yellow};
 
-const FILE_PATH: &str = "README.md";
 const OP_CRYPTO: &str = "crypto";
 const OP_GITHUBAPI: &str = "githubapi";
 const OP_OPENAI: &str = "openai";
 const OP_GREEN: &str = "green";
-const OP_DEMO: &str = "demo";
+const INDEX_HTML: &str = r#"
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WASI Server</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        table {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to WASI Server</h1>
+    <p>Thanks for running it</p>
+    <p>Created in collobration with Dipankar, Joel, and others</p>
+    <table>
+        <tr>
+            <th>Method</th>
+            <th>Endpoint</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/healthz</td>
+            <td>Health Check</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/</td>
+            <td>Home Page</td>
+        </tr>
+        <tr>
+            <td>PUT</td>
+            <td>/get-lazy?seconds={integer}</td>
+            <td>Get Lazy</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/**</td>
+            <td>Serve as a reverse Proxy</td>
+        </tr>
+    </table>
+</body>
+</html>
+"#;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -29,7 +76,7 @@ struct CommandToPerform {
     #[arg(short = 'n', long = "name")]
     name: String,
 
-    #[arg(short='o', long="op", value_parser=[OP_CRYPTO, OP_GITHUBAPI, OP_DEMO, OP_OPENAI, OP_GREEN], default_value_t=OP_DEMO.to_string())]
+    #[arg(short='o', long="op", value_parser=[OP_CRYPTO, OP_GITHUBAPI, OP_OPENAI, OP_GREEN])]
     operation: String,
 }
 
@@ -41,7 +88,6 @@ async fn hh(name: &str) {
     );
 }
 
-use waki::{handler, ErrorCode, Request, Response};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {
@@ -52,16 +98,92 @@ async fn main() -> Result<()> {
 
     #[handler]
     fn hello(req: Request) -> Result<Response, ErrorCode> {
-        let query = req.query();
-        Response::builder()
-            .body(
-                format!(
-                    "Hello, {}!",
-                    query.get("name").unwrap_or(&"WASI".to_string())
-                )
-                    .as_bytes(),
-            )
-            .build()
+        println!("client_request: {:?} {:?}", req.method(), req.url());
+        match (req.method(), req.path()) {
+            (waki::Method::Get, "/healthz") => {
+                println!("Health Check");
+                Response::builder()
+                    .status_code(200)
+                    .headers([("Content-Type", "text/plain"), ("Server", "WASI@v0.2")])
+                    .body(
+                        "Server is READY".as_bytes(),
+                    )
+                    .build()
+            }
+
+            (waki::Method::Get, "/") => {
+                Response::builder()
+                    .status_code(200)
+                    .headers([("Content-Type", "text/html"), ("Server", "WASI@v0.2")])
+                    .body(
+                        INDEX_HTML.as_bytes(),
+                    )
+                    .build()
+            }
+
+
+            (waki::Method::Put, "/get-lazy") => {
+                let query = req.query();
+                let now = SystemTime::now();
+                let sleep_duration = match query.get("seconds") {
+                    Some(s) => s.parse::<u64>().unwrap_or(1),
+                    None => 1,
+                };
+                sleep(Duration::new(sleep_duration, 0));
+                if let Err(e) = now.elapsed() {
+                    return Response::builder()
+                        .body(
+                            format!(
+                                "Error: {e:?}"
+                            ).as_bytes(),
+                        )
+                        .build();
+                }
+
+                Response::builder()
+                    .body(
+                        format!(
+                            "Thanks for making server lazy for, {}s!",
+                            query.get("seconds").unwrap_or(&"1".to_string())
+                        )
+                            .as_bytes(),
+                    )
+                    .build()
+            }
+
+            (waki::Method::Get, _) => {
+                let file_loc = req.path();
+
+                println!("{}", Blue.paint(format!("In file {:?}", file_loc)));
+
+                match fs::read_to_string(file_loc) {
+                    Ok(contents) => {
+                        Response::builder()
+                            .status_code(200)
+                            .headers([("Content-Type", "text/plain"), ("Server", "WASI@v0.2")])
+                            .body(
+                                format!("reverseproxy\n====\n{}",contents).as_bytes(),
+                            )
+                            .build()
+                    }
+                    Err(e) => {
+                        Response::builder()
+                            .status_code(404)
+                            .body(
+                                format!(
+                                    "Error: {e:?}"
+                                ).as_bytes(),
+                            )
+                            .build()
+                    }
+                }
+            }
+
+            _ => Response::builder()
+                .status_code(404)
+                .body("Not Found".as_bytes())
+                .build()
+        }
     }
 
     match args.operation.as_str() {
@@ -231,32 +353,6 @@ async fn main() -> Result<()> {
                 println!("{}={stars}", Green.bold().paint("Total Stars"));
             }
 
-        }
-        OP_DEMO => {
-            println!("{}", Black.paint(format!("Your Name: {}, Op: {}", args.name, args.operation)));
-
-            for (key, value) in env::vars() {
-                println!("{}", Black.paint(format!("{key} : {value}")));
-            }
-
-            println!("{}", Blue.paint(format!("In file {FILE_PATH}")));
-
-            let contents =
-            fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
-
-            println!("Content upto 50 chars: \n-----\n{}\n-----\n", &contents[..50]);
-
-            let now = SystemTime::now();
-
-            sleep(Duration::new(2, 0));
-            match now.elapsed() {
-                Ok(elapsed) => {
-                    println!("{}", Black.paint(format!("Sleeped for {}s", elapsed.as_secs())));
-                }
-                Err(e) => {
-                    eprintln!("{}", Red.bold().paint(format!("Error: {e:?}")));
-                }
-            }
         }
         _ => eprintln!("{}", Red.bold().paint("Invalid Operation choosen"))
     }
