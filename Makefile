@@ -126,6 +126,10 @@ run_openai:
 run_green:
 	wasmtime run -S http --dir=. composed.wasm -n dipankar --op green
 
+.PHONY: run_server
+run_server:
+	wasmtime serve -O pooling-allocator=n -S cli -S http --dir=. composed.wasm
+
 .PHONY: clean
 clean:
 	rm -vrf \

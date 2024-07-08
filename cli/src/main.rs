@@ -41,12 +41,28 @@ async fn hh(name: &str) {
     );
 }
 
+use waki::{handler, ErrorCode, Request, Response};
+
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {
 
     let args = CommandToPerform::parse();
 
     hh(&args.name).await;
+
+    #[handler]
+    fn hello(req: Request) -> Result<Response, ErrorCode> {
+        let query = req.query();
+        Response::builder()
+            .body(
+                format!(
+                    "Hello, {}!",
+                    query.get("name").unwrap_or(&"WASI".to_string())
+                )
+                    .as_bytes(),
+            )
+            .build()
+    }
 
     match args.operation.as_str() {
         OP_GREEN => {
