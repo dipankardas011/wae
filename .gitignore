@@ -7,6 +7,7 @@
 **/__pycache__/
 **/*_host/
 **/*.wasm
+**/*.cwasm
 **/*.idea/
 **/*.jpg
 **/*.jpeg

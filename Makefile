@@ -103,28 +103,30 @@ build_httpclient:
 
 .PHONY: build
 build: build_httpclient build_crypto build_openai build_watttime build_github_api build_cli
+	@echo -e "${green}DONE${clear} Converting the wasm -> cwasm for native bindings"
+	wasmtime compile composed.wasm
 	@echo -e "${green}DONE${clear} Build all the components"
 	@echo -e "next run the following commands make run_* to run the components"
 
 .PHONY: run_gen_pass
 run_gen_pass:
-	wasmtime run -S cli -S http composed.wasm -n password-gen -o crypto
+	wasmtime run -S cli -S http --allow-precompiled composed.cwasm -n password-gen -o crypto
 
 .PHONY: run_get_latest_release
 run_get_latest_release:
-	wasmtime run -S http composed.wasm -n dipankar --op githubapi
+	wasmtime run -S http --allow-precompiled composed.cwasm -n dipankar --op githubapi
 
 .PHONY: run_openai
 run_openai:
-	wasmtime run -S http --dir=. composed.wasm -n dipankar --op openai
+	wasmtime run -S http --allow-precompiled --dir=. composed.cwasm -n dipankar --op openai
 
 .PHONY: run_green
 run_green:
-	wasmtime run -S http --dir=. composed.wasm -n dipankar --op green
+	wasmtime run -S http --allow-precompiled --dir=. composed.cwasm -n dipankar --op green
 
 .PHONY: run_server
 run_server:
-	wasmtime serve -O pooling-allocator=n -S cli -S http --dir=. composed.wasm
+	wasmtime serve -O pooling-allocator=n -S cli -S http --allow-precompiled --dir=. composed.cwasm
 
 .PHONY: clean
 clean:
