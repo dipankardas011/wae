@@ -21,6 +21,7 @@ make run_**
 ```mermaid
 graph TD;
     cli(["`CLI Written **Rust**`"])-->crypto(["`Crypto Written **Python**`"]);
+    cli-->webserver(["`HTTP webserver Written **Rust** present inside the cli`"]);
     cli-->githubapi(["`Githubapi Written **Python**`"]);
     cli-->openai(["`OpenAI LLM Written **Python**`"]);
     cli-->watt(["`Watt_time client Written **Python**`"]);

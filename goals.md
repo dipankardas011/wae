@@ -63,5 +63,17 @@ Integrate the above two goals [3](#goal-3) [4](#goal-4) [5](#goal-5)
 
 https://docs.watttime.org/
 
-> [!IMPORTANT]
-> Finally deploy using these in a docker container and runtimeclass in K8s
+
+## Goal 8
+
+- [x] Achieved?
+
+- use wasi:http server
+
+## Goal 9
+
+- [ ] Achieved?
+
+replace all the waki http client and server with the wasi http implementation
+
+> drawbacks are so much low level control, but its fun ;)
