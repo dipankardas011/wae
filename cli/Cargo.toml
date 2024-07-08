@@ -11,6 +11,7 @@ wit-bindgen-rt = { version = "0.26.0", features = ["bitflags"] }
 tokio = { version = "1.38.0", features = ["sync","macros","io-util","rt","time"] }
 anyhow = "1.0.86"
 ansi_term = "0.12"
+waki = "0.3.0"
 
 [profile.release]
 codegen-units = 1

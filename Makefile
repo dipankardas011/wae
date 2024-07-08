@@ -110,10 +110,6 @@ build: build_httpclient build_crypto build_openai build_watttime build_github_ap
 run_gen_pass:
 	wasmtime run -S cli -S http composed.wasm -n password-gen -o crypto
 
-.PHONY: run_demo
-run_demo:
-	wasmtime run -S cli -S http --env OPENAI_API_KEY="ABCD1234" --dir=. composed.wasm -n dipankar --op demo
-
 .PHONY: run_get_latest_release
 run_get_latest_release:
 	wasmtime run -S http composed.wasm -n dipankar --op githubapi
@@ -125,6 +121,10 @@ run_openai:
 .PHONY: run_green
 run_green:
 	wasmtime run -S http --dir=. composed.wasm -n dipankar --op green
+
+.PHONY: run_server
+run_server:
+	wasmtime serve -O pooling-allocator=n -S cli -S http --dir=. composed.wasm
 
 .PHONY: clean
 clean:
