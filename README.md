@@ -1,5 +1,7 @@
 # wae (wasi-app-experiments)
 
+![coverimg](./cover.png)
+
 A project which showcases latest development in wasi world. Currently its updated for `wasi@v0.2`. It Helps in accumulate learnings from ML, Green Software and Wasi into a single repo
 
 Why create this?
