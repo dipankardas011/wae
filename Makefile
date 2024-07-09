@@ -6,7 +6,8 @@ clear=\033[0m
 .PHONY: gen-componentize-py-crypto
 gen-componentize-py-crypto:
 	cd crypto && rm -rf crypto && \
-		componentize-py --wit-path wit/world.wit --world crypto bindings .
+		componentize-py --wit-path wit/world.wit --world crypto bindings . && \
+		wit-bindgen markdown --html-in-md wit
 
 
 .PHONY: gen-componentize-py-watttime
@@ -14,21 +15,24 @@ gen-componentize-py-watttime:
 	cd watttime && \
 		wit-deps && \
 		rm -rf green && \
-		componentize-py --wit-path wit --world green bindings .
+		componentize-py --wit-path wit --world green bindings . && \
+		wit-bindgen markdown --html-in-md wit
 
 .PHONY: gen-componentize-py-githubapi
 gen-componentize-py-githubapi:
 	cd githubapi && \
 		wit-deps && \
 		rm -rf project && \
-		componentize-py --wit-path wit --world project bindings .
+		componentize-py --wit-path wit --world project bindings . && \
+		wit-bindgen markdown --html-in-md wit
 
 .PHONY: gen-componentize-py-openai
 gen-componentize-py-openai:
 	cd openai && \
 		wit-deps && \
 		rm -rf genai && \
-		componentize-py --wit-path wit --world genai bindings .
+		componentize-py --wit-path wit --world genai bindings . && \
+		wit-bindgen markdown --html-in-md wit
 
 .PHONY: build_cli
 build_cli:
@@ -98,7 +102,8 @@ build_openai:
 .PHONY: build_httpclient
 build_httpclient:
 	cd httpclient && \
-		cargo component build --release
+		cargo component build --release && \
+		wit-bindgen markdown --html-in-md wit
 	@echo -e "${green}PASS${clear} Build for httpclient/"
 
 .PHONY: build
