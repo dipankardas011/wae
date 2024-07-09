@@ -1,6 +1,6 @@
-# Automate Using WASM
+# wae (wasi-app-experiments)
 
-It Provides a nice small project which showcases latest development in wasi world. Currently its updated for `wasi@v0.2`. It Helps in accumulate learnings from ML, Green Software and Wasi into a single repo
+A project which showcases latest development in wasi world. Currently its updated for `wasi@v0.2`. It Helps in accumulate learnings from ML, Green Software and Wasi into a single repo
 
 Why create this?
 Becuase this is the main selling point of the wasi to be able to create logic indenendent of the language and highly decoplied ways and with low latency and low footprint (Env Sustabanle ;>). aka benifies of multiple people working in different modules of the program but  at the end all are merged and created a single product
