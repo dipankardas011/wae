@@ -64,3 +64,8 @@ is the module for interacting with the WattTime api
 is the module for interacting with the http client, it is written in rust and uses the `waki` which is built on top of `wasi:http` crate for the http client
 
 used by `githubapi`, `watttime` and `openai`
+
+## Contributors
+- @dicej
+- @dipankardas011
+- @L0RD-ZER0
