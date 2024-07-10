@@ -70,5 +70,5 @@ is the module for interacting with the http client, it is written in rust and us
 used by `githubapi`, `watttime` and `openai`
 
 ## References & acknowledgements
-- @dicej for all the help on how python, rust and build process of the wasi
-- @L0RD-ZER0 for the help in implementing in wasi::http::outgoing_handler
+- [dicej](dicej) for all the help on how python, rust and build process of the wasi
+- [L0RD-ZER0](https://github.com/L0RD-ZER0) for the help in implementing in wasi::http::outgoing_handler
